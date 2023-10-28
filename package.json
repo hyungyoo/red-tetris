@@ -1,0 +1,27 @@
+{
+  "name": "red-tetris",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "back:dev": "",
+    "front:dev": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyungyoo/red-tetris.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyungyoo/red-tetris/issues"
+  },
+  "homepage": "https://github.com/hyungyoo/red-tetris#readme",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
