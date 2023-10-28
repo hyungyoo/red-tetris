@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [{ "path": "packages/front" }, { "path": "packages/back" }],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@front/*": ["packages/front/src"],
+      "@back/*": ["packages/back/src"]
+    }
+  }
+}
