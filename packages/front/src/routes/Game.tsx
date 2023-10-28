@@ -14,7 +14,7 @@ function GamePage() {
     if (match === null)
       // slug did not match the regex
       navigate('/')
-  }, [slug])
+  }, [slug, match, navigate])
 
   return (
     <div>
