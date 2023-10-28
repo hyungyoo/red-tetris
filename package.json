@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "back:dev": "",
-    "front:dev": ""
+    "back:dev": "npm run -w @red-tetris/back dev",
+    "front:dev": "npm run -w @red-tetris/front start"
   },
   "repository": {
     "type": "git",
