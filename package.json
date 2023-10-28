@@ -2,10 +2,9 @@
   "name": "red-tetris",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "back:dev": "npm run -w @red-tetris/back dev",
-    "front:dev": "npm run -w @red-tetris/front start"
+    "back:dev": "env-cmd -f .env npm run -w @red-tetris/back dev",
+    "front:dev": "env-cmd -f .env npm run -w @red-tetris/front start"
   },
   "repository": {
     "type": "git",
@@ -23,5 +22,8 @@
   ],
   "devDependencies": {
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "env-cmd": "^10.1.0"
   }
 }
