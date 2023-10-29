@@ -1,30 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface Room {
+export interface Join {
   roomName: string
   userName: string
 }
 
-const initialState: Room = {
+const initialState: Join = {
   roomName: '',
   userName: ''
 }
 
-const RoomSlice = createSlice({
-  name: 'room',
+const joinSlice = createSlice({
+  name: 'join',
   initialState,
   reducers: {
     updateRoomName(state, action: PayloadAction<{ roomName: string }>) {
       const { roomName } = action.payload
       state.roomName = roomName
     },
-    updateUsereName(state, action: PayloadAction<{ userName: string }>) {
+    updateUserName(state, action: PayloadAction<{ userName: string }>) {
       const { userName } = action.payload
       state.userName = userName
     }
   }
 })
 
-export const { updateRoomName, updateUsereName } = RoomSlice.actions
+export const { updateRoomName, updateUserName } = joinSlice.actions
 
-export default RoomSlice.reducer
+export default joinSlice.reducer

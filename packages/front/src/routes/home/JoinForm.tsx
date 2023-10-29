@@ -1,17 +1,17 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import InputField from '../../components/InputField'
 import Section from '../../components/Section'
 import { useNavigate } from 'react-router-dom'
 import DefaultButton from '../../components/DefaultButton'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
-import { updateRoomName, updateUsereName } from '../../redux/reducers/roomSlice'
+import { updateRoomName, updateUserName } from '../../redux/reducers/joinSlice'
 import { RootState } from '../../redux/store'
 
 function JoinForm() {
   const navigate = useNavigate()
   const disatch = useAppDispatch()
   // TODO: replace logic with redux
-  const { roomName, userName } = useAppSelector((state: RootState) => state.room)
+  const { roomName, userName } = useAppSelector((state: RootState) => state.join)
 
   const setRoomName = useCallback(
     (value: string) => {
@@ -22,7 +22,7 @@ function JoinForm() {
 
   const setUserName = useCallback(
     (value: string) => {
-      disatch(updateUsereName({ userName: value }))
+      disatch(updateUserName({ userName: value }))
     },
     [disatch]
   )
