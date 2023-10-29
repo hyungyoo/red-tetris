@@ -2,6 +2,7 @@ import { useState } from 'react'
 import InputField from '../../components/InputField'
 import Block from '../../components/Block'
 import { useNavigate } from 'react-router-dom'
+import DefaultButton from '../../components/DefaultButton'
 
 function JoinForm() {
   const navigate = useNavigate()
@@ -18,7 +19,7 @@ function JoinForm() {
       <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center'>
         <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />
         <InputField label={'room name'} type={'text'} name={roomName} value={roomName} setValue={setRoomName} />
-        <button>Click</button>
+        <DefaultButton type='submit' label='Join' />
       </form>
     </Block>
   )
