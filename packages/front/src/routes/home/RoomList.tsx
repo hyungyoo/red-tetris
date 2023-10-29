@@ -17,8 +17,9 @@ function RoomList(props: RoomListProps) {
       <ul className='w-full'>
         {props.rooms.map(room => (
           <li key={room.id} className='flex justify-between w-full'>
-            <Section title={room.name}> </Section>
-            <ul>{room.players.length && room.players.map(p => <li>{p}</li>)}</ul>
+            <Section title={room.name}>
+              <ul className='w-96'>{room.players.length && room.players.map(p => <li>{p}</li>)}</ul>
+            </Section>
           </li>
         ))}
       </ul>

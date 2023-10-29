@@ -7,6 +7,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Poppins', ...defaultTheme.fontFamily.sans]
+      },
+      backgroundImage: {
+        tetris: "url('assets/images/tetris.png')"
       }
     }
   },

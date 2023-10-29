@@ -33,12 +33,14 @@ function JoinForm() {
   }
 
   return (
-    <Section title='Join Room'>
-      <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center'>
-        <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />
-        <InputField label={'room name'} type={'text'} name={roomName} value={roomName} setValue={setRoomName} />
-        <DefaultButton type='submit' label='Join' />
-      </form>
+    <Section title='Welcome'>
+      <Section title='Join Room'>
+        <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center w-96 h-full'>
+          <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />
+          <InputField label={'room name'} type={'text'} name={roomName} value={roomName} setValue={setRoomName} />
+          <DefaultButton type='submit' label='Join' />
+        </form>
+      </Section>
     </Section>
   )
 }

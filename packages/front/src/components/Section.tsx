@@ -5,8 +5,8 @@ interface SectionProps {
 
 function Section(props: SectionProps) {
   return (
-    <div className='section relative border py-10 px-4 m-3 h-full rounded-md'>
-      <h2 className='absolute -top-3 left-2 bg-white font-semibold px-2'>{props.title}</h2>
+    <div className='section relative border p-4 m-2 rounded-md'>
+      <h2 className='capitalize absolute -top-3 left-2 bg-white font-semibold px-2'>{props.title}</h2>
       {props.children}
     </div>
   )
