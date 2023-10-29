@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import InputField from '../../components/InputField'
-import Block from '../../components/Block'
+import Section from '../../components/Section'
 import { useNavigate } from 'react-router-dom'
 import DefaultButton from '../../components/DefaultButton'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
@@ -31,15 +31,15 @@ function JoinForm() {
     e.preventDefault()
     navigate(`${roomName}[${userName}]`)
   }
-  
+
   return (
-    <Block title='Join Room'>
+    <Section title='Join Room'>
       <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center'>
         <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />
         <InputField label={'room name'} type={'text'} name={roomName} value={roomName} setValue={setRoomName} />
         <DefaultButton type='submit' label='Join' />
       </form>
-    </Block>
+    </Section>
   )
 }
 
