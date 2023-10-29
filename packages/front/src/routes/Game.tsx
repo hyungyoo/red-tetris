@@ -5,6 +5,7 @@ function GamePage() {
   const { slug } = useParams()
   const navigate = useNavigate()
 
+  console.log(slug)
   const regex = /^(\w+)(?:\[(.*?)\])?$/
   const match = slug?.match(regex)
   const roomName = match?.[1]

@@ -1,5 +1,13 @@
+import Block from '../components/Block'
+import JoinForm from './home/JoinForm'
+
 function Home() {
-  return <h1 className='text-3xl font-bold underline text-red-600'>Simple React Typescript Tailwind Sample</h1>
+  return (
+    <div className='flex justify-center w-full'>
+      <JoinForm />
+      <div>list</div>
+    </div>
+  )
 }
 
 export default Home
