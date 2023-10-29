@@ -1,4 +1,4 @@
-import Block from '../../components/Block'
+import Section from '../../components/Section'
 
 export type Room = {
   id: number
@@ -13,16 +13,17 @@ interface RoomListProps {
 }
 function RoomList(props: RoomListProps) {
   return (
-    <Block title='Room List'>
+    <Section title='Room List'>
       <ul className='w-full'>
         {props.rooms.map(room => (
           <li key={room.id} className='flex justify-between w-full'>
-            <Block title={room.name}> </Block>
-            <ul>{room.players.length && room.players.map(p => <li>{p}</li>)}</ul>
+            <Section title={room.name}>
+              <ul className='w-96'>{room.players.length && room.players.map(p => <li>{p}</li>)}</ul>
+            </Section>
           </li>
         ))}
       </ul>
-    </Block>
+    </Section>
   )
 }
 
