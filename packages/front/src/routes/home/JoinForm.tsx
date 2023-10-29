@@ -1,19 +1,37 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import InputField from '../../components/InputField'
 import Block from '../../components/Block'
 import { useNavigate } from 'react-router-dom'
 import DefaultButton from '../../components/DefaultButton'
+import { useAppDispatch, useAppSelector } from '../../redux/hook'
+import { updateRoomName, updateUsereName } from '../../redux/reducers/roomSlice'
+import { RootState } from '../../redux/store'
 
 function JoinForm() {
   const navigate = useNavigate()
+  const disatch = useAppDispatch()
   // TODO: replace logic with redux
-  const [userName, setUserName] = useState<string>('')
-  const [roomName, setRoomName] = useState<string>('')
+  const { roomName, userName } = useAppSelector((state: RootState) => state.room)
+
+  const setRoomName = useCallback(
+    (value: string) => {
+      disatch(updateRoomName({ roomName: value }))
+    },
+    [disatch]
+  )
+
+  const setUserName = useCallback(
+    (value: string) => {
+      disatch(updateUsereName({ userName: value }))
+    },
+    [disatch]
+  )
 
   function handleOnSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     navigate(`${roomName}[${userName}]`)
   }
+  
   return (
     <Block title='Join Room'>
       <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center'>
