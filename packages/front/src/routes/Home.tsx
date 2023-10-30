@@ -1,33 +1,52 @@
+import { useEffect } from 'react'
+import Layout from '../components/Layout'
 import JoinForm from './home/JoinForm'
-import RoomList, { Room } from './home/RoomList'
-import tetris from '../assets/images/tetris.png'
+import RoomList, { Room, RoomStatus } from './home/RoomList'
+import { io } from 'socket.io-client'
 
 const TEST_ROOMS: Room[] = [
   {
-    id: 1,
     name: 'room1',
-    players: ['hyungyoo', 'kychoi']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   },
   {
-    id: 2,
     name: 'room2',
-    players: ['seyun', 'dolee']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   },
   {
-    id: 3,
     name: 'room3',
-    players: ['sucho', 'cjung-mo']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   }
 ]
 
 function Home() {
+  useEffect(() => {
+    // Replace 'http://localhost:YOUR_SERVER_PORT' with the actual URL of your Socket.IO server.
+    // FIXME: change to env
+    const socket = io(`http://localhost:9000`)
+
+    // Set up event listeners or perform actions with the socket
+    socket.on('connect', () => {
+      console.log('Connected to the server')
+    })
+
+    socket.on('customEvent', data => {
+      console.log('Received custom event:', data)
+    })
+
+    return () => {
+      // Clean up the socket connection when the component unmounts
+      socket.disconnect()
+    }
+  }, [])
   return (
-    <div className='w-full h-screen bg-tetris bg-cover relative'>
-      <div className='w-full h-screen backdrop-blur-sm flex justify-center absolute top-0 left-0 p-32'>
-        <JoinForm />
-        <RoomList rooms={TEST_ROOMS} />
-      </div>
-    </div>
+    <Layout>
+      <JoinForm />
+      <RoomList rooms={TEST_ROOMS} />
+    </Layout>
   )
 }
 

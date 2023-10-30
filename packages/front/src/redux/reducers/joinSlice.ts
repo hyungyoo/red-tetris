@@ -14,13 +14,11 @@ const joinSlice = createSlice({
   name: 'join',
   initialState,
   reducers: {
-    updateRoomName(state, action: PayloadAction<{ roomName: string }>) {
-      const { roomName } = action.payload
-      state.roomName = roomName
+    updateRoomName(state, action: PayloadAction<string>) {
+      state.roomName = action.payload
     },
-    updateUserName(state, action: PayloadAction<{ userName: string }>) {
-      const { userName } = action.payload
-      state.userName = userName
+    updateUserName(state, action: PayloadAction<string>) {
+      state.userName = action.payload
     }
   }
 })

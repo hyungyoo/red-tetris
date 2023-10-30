@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "files": [],
-  "references": [{ "path": "packages/front" }, { "path": "packages/back" }],
+  "references": [{ "path": "packages/front" }, { "path": "packages/back" }, {"path":"packages/test_ws"}],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

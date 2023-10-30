@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "back:dev": "env-cmd -f .env npm run -w @red-tetris/back start:dev",
-    "front:dev": "env-cmd -f .env npm run -w @red-tetris/front start"
+    "front:dev": "env-cmd -f .env npm run -w @red-tetris/front start",
+    "test:dev": "env-cmd -f .env npm run -w @red-tetris/test_ws start:dev"
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,21 @@
 import Section from '../../components/Section'
 
-export type Room = {
-  id: number
+export enum RoomStatus {
+  WAITING = 'waiting',
+  PLAYING = 'playing'
+}
+
+export type Player = {
+  id?: string // player socket id => need??
   name: string
-  players: string[]
+  score?: number
+}
+
+export type Room = {
+  id?: string // room socket id => need??
+  name: string
+  players: Player[]
+  status: RoomStatus
 }
 
 interface RoomListProps {
@@ -18,7 +30,7 @@ function RoomList(props: RoomListProps) {
         {props.rooms.map(room => (
           <li key={room.id} className='flex justify-between w-full'>
             <Section title={room.name}>
-              <ul className='w-96'>{room.players.length && room.players.map(p => <li>{p}</li>)}</ul>
+              <ul className='w-96'>{room.players.length && room.players.map(p => <li>{p.name}</li>)}</ul>
             </Section>
           </li>
         ))}
