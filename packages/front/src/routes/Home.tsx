@@ -1,22 +1,22 @@
 import Layout from '../components/Layout'
 import JoinForm from './home/JoinForm'
-import RoomList, { Room } from './home/RoomList'
+import RoomList, { Room, RoomStatus } from './home/RoomList'
 
 const TEST_ROOMS: Room[] = [
   {
-    id: 1,
     name: 'room1',
-    players: ['hyungyoo', 'kychoi']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   },
   {
-    id: 2,
     name: 'room2',
-    players: ['seyun', 'dolee']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   },
   {
-    id: 3,
     name: 'room3',
-    players: ['sucho', 'cjung-mo']
+    status: RoomStatus.WAITING,
+    players: [{ name: 'hyungyoo' }, { name: 'kychoi' }]
   }
 ]
 

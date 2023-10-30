@@ -15,14 +15,14 @@ function JoinForm() {
 
   const setRoomName = useCallback(
     (value: string) => {
-      disatch(updateRoomName({ roomName: value }))
+      disatch(updateRoomName(value))
     },
     [disatch]
   )
 
   const setUserName = useCallback(
     (value: string) => {
-      disatch(updateUserName({ userName: value }))
+      disatch(updateUserName(value))
     },
     [disatch]
   )
