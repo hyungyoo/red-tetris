@@ -23,10 +23,8 @@ const TEST_ROOMS: Room[] = [
 function Home() {
   return (
     <Layout>
-      <div className='w-full h-screen backdrop-blur-sm flex justify-center absolute top-0 left-0 p-32'>
-        <JoinForm />
-        <RoomList rooms={TEST_ROOMS} />
-      </div>
+      <JoinForm />
+      <RoomList rooms={TEST_ROOMS} />
     </Layout>
   )
 }
