@@ -1,16 +1,30 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
+import { io } from 'socket.io-client'
+import { useSocket } from '../utils/hooks/useSocket'
+import Section from '../components/Section'
+import DefaultButton from '../components/DefaultButton'
 
 function GamePage() {
   const { slug } = useParams()
+  const { socket } = useSocket()
   const navigate = useNavigate()
 
-  console.log(slug)
   const regex = /^(\w+)(?:\[(.*?)\])?$/
   const match = slug?.match(regex)
   const roomName = match?.[1]
   const userName = match?.[2] || 'Anonymous'
+
+  useEffect(() => {
+    //TODO: join room emit when component mounted
+    console.log('socket:', socket)
+    return () => {
+      //TODO: leave room emit when component unmounted
+      // Clean up the socket connection when the component unmounts
+      // socket.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (match === null)
@@ -20,8 +34,13 @@ function GamePage() {
 
   return (
     <Layout>
-      <h1>Room name: {roomName}</h1>
-      <h1>User name: {userName}</h1>
+      <DefaultButton label={'Back'} onClick={() => navigate('/')} />
+      <div className='flex justify-center'>
+        <Section title='Game'>
+          <h1>Room name: {roomName}</h1>
+          <h1>User name: {userName}</h1>
+        </Section>
+      </div>
     </Layout>
   )
 }

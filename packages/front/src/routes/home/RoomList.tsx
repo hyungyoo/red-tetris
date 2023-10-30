@@ -27,10 +27,12 @@ function RoomList(props: RoomListProps) {
   return (
     <Section title='Room List'>
       <ul className='w-full'>
-        {props.rooms.map(room => (
-          <li key={room.id} className='flex justify-between w-full'>
+        {props.rooms.map((room, i) => (
+          <li key={`room[${i}]`} className='flex justify-between w-full'>
             <Section title={room.name}>
-              <ul className='w-96'>{room.players.length && room.players.map(p => <li>{p.name}</li>)}</ul>
+              <ul className='w-96'>
+                {room.players.length && room.players.map((p, j) => <li key={`player_name[${j}]`}>{p.name}</li>)}
+              </ul>
             </Section>
           </li>
         ))}

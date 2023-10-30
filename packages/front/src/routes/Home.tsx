@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import Layout from '../components/Layout'
 import JoinForm from './home/JoinForm'
 import RoomList, { Room, RoomStatus } from './home/RoomList'
-import { io } from 'socket.io-client'
+import { useSocket } from '../utils/hooks/useSocket'
 
 const TEST_ROOMS: Room[] = [
   {
@@ -23,29 +23,30 @@ const TEST_ROOMS: Room[] = [
 ]
 
 function Home() {
+  const { socket } = useSocket()
   useEffect(() => {
-    // Replace 'http://localhost:YOUR_SERVER_PORT' with the actual URL of your Socket.IO server.
-    // FIXME: change to env
-    const socket = io(`http://localhost:9000`)
-
     // Set up event listeners or perform actions with the socket
+    console.log(socket)
     socket.on('connect', () => {
-      console.log('Connected to the server')
+      socket.emit('getRoomList')
     })
 
-    socket.on('customEvent', data => {
-      console.log('Received custom event:', data)
+    socket.on('roomList', data => {
+      // TODO: dispatch roomList using redux
+      console.log('rooms:', data)
     })
 
     return () => {
       // Clean up the socket connection when the component unmounts
-      socket.disconnect()
+      // socket.disconnect()
     }
   }, [])
   return (
     <Layout>
-      <JoinForm />
-      <RoomList rooms={TEST_ROOMS} />
+      <div className='flex justify-center h-full'>
+        <JoinForm />
+        <RoomList rooms={TEST_ROOMS} />
+      </div>
     </Layout>
   )
 }
