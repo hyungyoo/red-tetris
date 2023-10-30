@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Layout from '../components/Layout'
 
 function GamePage() {
   const { slug } = useParams()
@@ -18,10 +19,10 @@ function GamePage() {
   }, [slug, match, navigate])
 
   return (
-    <div>
+    <Layout>
       <h1>Room name: {roomName}</h1>
       <h1>User name: {userName}</h1>
-    </div>
+    </Layout>
   )
 }
 
