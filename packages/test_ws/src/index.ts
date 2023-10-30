@@ -10,9 +10,17 @@ const port = process.env.TEST_PORT;
 
 app.use(cors());
 
+//#region Express Server
+app.get('/', (req: Request, res: Response) => {
+	res.send('Express + TypeScript Server');
+});
+
 const httpServer = app.listen(port, () => {
 	console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
+//#endregion
+
+//#region Web Socket Server with Socket.io
 const io = new Server(httpServer, {
 	cors: {
 		origin: `http://localhost:${process.env.FRONT_PORT}`, // Allow requests from your React client
@@ -20,10 +28,8 @@ const io = new Server(httpServer, {
 	},
 });
 
-app.get('/', (req: Request, res: Response) => {
-	res.send('Express + TypeScript Server');
-});
-
 io.on('connection', (socket) => {
 	console.log('a user connected', socket.id);
 });
+//#endregion
+
