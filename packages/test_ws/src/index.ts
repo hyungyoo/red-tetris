@@ -9,6 +9,23 @@ const app: Express = express();
 const port = process.env.TEST_PORT;
 const userList = new Map();
 
+export enum RoomStatus {
+  WAITING = "waiting",
+  PLAYING = "playing",
+}
+
+export type Player = {
+  name: string
+  score?: number
+  status: RoomStatus
+}
+
+export type Room = {
+  name: string
+  players: Player[]
+  status: RoomStatus
+}
+
 app.use(cors());
 
 //#region Express Server
@@ -32,34 +49,56 @@ const io = new Server(httpServer, {
 /**
  * This function let you get public room list with user list in each room
  */
-function getPublicRoomList(clientSocketId:string) {
+function getPublicRoomList() {
 	const {rooms} = io.sockets.adapter;
-
-	const publicRooms = {};
+	const publicRooms:Room[] = [];
 	
-	rooms.forEach((ids, roomName) => {
-		// choice only public room && not him self(in this moment, current client is not in userList)
-		if (!userList.has(roomName) && roomName !== clientSocketId) {
-			// update object with {roomName: userList}
-			publicRooms[roomName] = Array.from(ids).map((id) => userList.get(id));
+	rooms.forEach((ids, name) => {
+		// Public room has a name not hashed and not in ids
+		if (!isPrivateRoom(ids, name)) {
+			const players = Array.from(ids).map((id) => userList.get(id)) as Player[];
+			if (players) {
+				publicRooms.push({
+					name,
+					status: RoomStatus.WAITING,
+					players
+				});
+			}
 		}
 	})
 	return publicRooms
 }
 
+/**
+ * This function let you know if a room is private or not
+ * When a room is private, it has a name hashed and a socket.id in ids
+ */
+function isPrivateRoom(setInstance:Set<string>, roomName:string):boolean {
+	const setIter = setInstance.values();
+
+	return setIter.next().value === roomName;
+}
+
 io.on('connection', (socket) => {
 	socket.on('getRoomList', () => {
-		socket.emit('roomList', getPublicRoomList(socket.id));
+		socket.emit('roomList', getPublicRoomList());
 	})
 	socket.on('joinRoom', (data) => {
 		const {roomName, userName} = data;
 
 		// save userName with socket.id
-		userList.set(socket.id, userName);
+		const currentPlayer = {
+			name: userName,
+			status: RoomStatus.WAITING,
+		}
+		userList.set(socket.id, currentPlayer);
 		// join room
 		socket.join(roomName);
-
-		console.log("joinRoom", socket.rooms, "userList", userList);
+	})
+	socket.on('disconnecting', (reason) => {
+		userList.delete(socket.id);
+		io.emit('roomList', getPublicRoomList());
+		console.log("disconnecting", reason)
 	})
 });
 //#endregion
