@@ -33,7 +33,7 @@ function Home() {
 
     socket.on('roomList', data => {
       // TODO: dispatch roomList using redux
-      console.log('rooms:', data)
+      console.log('rooms:', data);
     })
 
     return () => {

@@ -17,8 +17,7 @@ function GamePage() {
   const userName = match?.[2] || 'Anonymous'
 
   useEffect(() => {
-    //TODO: join room emit when component mounted
-    console.log('socket:', socket)
+    socket.emit("joinRoom", {roomName, userName});
     return () => {
       //TODO: leave room emit when component unmounted
       // Clean up the socket connection when the component unmounts
