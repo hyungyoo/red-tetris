@@ -6,6 +6,7 @@ import DefaultButton from '../../components/DefaultButton'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { updateRoomName, updateUserName } from '../../redux/reducers/joinSlice'
 import { RootState } from '../../redux/store'
+import { useSocket } from '../../utils/hooks/useSocket'
 
 function JoinForm() {
   const navigate = useNavigate()

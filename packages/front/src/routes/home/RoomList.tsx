@@ -1,14 +1,15 @@
 import Section from '../../components/Section'
 
 export enum RoomStatus {
-  WAITING = 'waiting',
-  PLAYING = 'playing'
+  WAITING = "waiting",
+  PLAYING = "playing"
 }
 
 export type Player = {
   id?: string // player socket id => need??
   name: string
   score?: number
+  status: RoomStatus
 }
 
 export type Room = {
@@ -24,14 +25,15 @@ interface RoomListProps {
   //   onCreate: () => void
 }
 function RoomList(props: RoomListProps) {
+  const {rooms} = props
   return (
     <Section title='Room List'>
       <ul className='w-full'>
-        {props.rooms.map((room, i) => (
+        {rooms && rooms.map((room, i) => (
           <li key={`room[${i}]`} className='flex justify-between w-full'>
-            <Section title={room.name}>
+            <Section title={room?.name}>
               <ul className='w-96'>
-                {room.players.length && room.players.map((p, j) => <li key={`player_name[${j}]`}>{p.name}</li>)}
+                {room.players?.length && room.players.map((p, j) => <li key={`player_name[${j}]`}>{p?.name}</li>)}
               </ul>
             </Section>
           </li>
