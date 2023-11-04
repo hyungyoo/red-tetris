@@ -7,19 +7,21 @@ interface RoomListProps {
   //   onCreate: () => void
 }
 function RoomList(props: RoomListProps) {
-  const {rooms} = props
+  const { rooms } = props
   return (
     <Section title='Room List'>
       <ul className='w-full'>
-        {rooms && rooms.map((room, i) => (
-          <li key={`room[${i}]`} className='flex justify-between w-full'>
-            <Section title={room?.name}>
-              <ul className='w-96'>
-                {room.players?.length && room.players.map((p, j) => <li key={`player_name[${j}]`}>{p?.name}</li>)}
-              </ul>
-            </Section>
-          </li>
-        ))}
+        {rooms &&
+          rooms.map((room, i) => (
+            <li key={`room[${i}]`} className='flex justify-between w-full'>
+              <Section title={room?.name}>
+                <ul className='w-96'>
+                  {room.players?.length &&
+                    room.players.map((p: any, j: any) => <li key={`player_name[${j}]`}>{p?.name}</li>)}
+                </ul>
+              </Section>
+            </li>
+          ))}
       </ul>
     </Section>
   )
