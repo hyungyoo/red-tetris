@@ -1,6 +1,10 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  WsException,
+} from '@nestjs/websockets';
 
-@WebSocketGateway()
+@WebSocketGateway({ path: '/', cors: '*' })
 export class GameGateway {
   @SubscribeMessage('message')
   handleMessage(client: any, payload: any): string {
