@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { Server, Socket } from 'socket.io';
 import cors from 'cors';
+import {RoomStatus, Player, Room, PlayerStatus} from "@red-tetris/common"
 
 dotenv.config();
 
@@ -9,22 +10,6 @@ const app: Express = express();
 const port = process.env.TEST_PORT;
 const userList = new Map();
 
-export enum RoomStatus {
-  WAITING = "waiting",
-  PLAYING = "playing",
-}
-
-export type Player = {
-  name: string
-  score?: number
-  status: RoomStatus
-}
-
-export type Room = {
-  name: string
-  players: Player[]
-  status: RoomStatus
-}
 
 app.use(cors());
 
@@ -89,7 +74,7 @@ io.on('connection', (socket) => {
 		// save userName with socket.id
 		const currentPlayer = {
 			name: userName,
-			status: RoomStatus.WAITING,
+			status: PlayerStatus.WAITING,
 		}
 		userList.set(socket.id, currentPlayer);
 		// join room

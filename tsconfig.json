@@ -12,7 +12,7 @@
     "paths": {
       "@front/*": ["packages/front/src"],
       "@back/*": ["packages/back/src"],
-      "@common/*": ["packages/common/src"]
+      "@common/*": ["packages/common"]
     }
   }
 }

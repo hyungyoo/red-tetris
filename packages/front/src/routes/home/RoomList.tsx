@@ -1,23 +1,5 @@
 import Section from '../../components/Section'
-
-export enum RoomStatus {
-  WAITING = "waiting",
-  PLAYING = "playing"
-}
-
-export type Player = {
-  id?: string // player socket id => need??
-  name: string
-  score?: number
-  status: RoomStatus
-}
-
-export type Room = {
-  id?: string // room socket id => need??
-  name: string
-  players: Player[]
-  status: RoomStatus
-}
+import { Room } from '@red-tetris/common'
 
 interface RoomListProps {
   rooms: Room[]
