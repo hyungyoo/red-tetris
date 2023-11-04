@@ -26,7 +26,7 @@ function Home() {
       // Clean up the socket connection when the component unmounts
       // socket.disconnect()
     }
-  }, [])
+  }, [socket.connected])
   return (
     <Layout>
       <div className='flex justify-center h-full'>
