@@ -3,10 +3,16 @@ export enum RoomStatus {
   PLAYING = 'playing'
 }
 
+export enum PlayerStatus {
+  WAITING = 'waiting',
+  READY = 'ready',
+  PLAYING = 'playing'
+}
+
 export type Player = {
   name: string
   score?: number
-  status: RoomStatus
+  status: PlayerStatus
 }
 
 export type Room = {

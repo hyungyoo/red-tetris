@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import JoinForm from './home/JoinForm'
-import RoomList, { Room, RoomStatus } from './home/RoomList'
+import RoomList from './home/RoomList'
+import { Room } from '@red-tetris/common'
 import { useSocket } from '../utils/hooks/useSocket'
 
 function Home() {
