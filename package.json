@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "back:dev": "env-cmd -f .env npm run -w @red-tetris/back start:dev",
-    "front:dev": "env-cmd -f .env npm run -w @red-tetris/front start",
-    "test:dev": "env-cmd -f .env npm run -w @red-tetris/test_ws start:dev"
+    "common:build": "env-cmd -f .env npm run -w @red-tetris/common build",
+    "back:dev": "npm run common:build && env-cmd -f .env npm run -w @red-tetris/back start:dev",
+    "front:dev": "npm run common:build && env-cmd -f .env npm run -w @red-tetris/front start",
+    "test:dev": "npm run common:build && env-cmd -f .env npm run -w @red-tetris/test_ws start:dev"
   },
   "repository": {
     "type": "git",
