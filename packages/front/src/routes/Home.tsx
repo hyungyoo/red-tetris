@@ -18,16 +18,13 @@ function Home() {
 
     socket.on('roomList', data => {
       // TODO: dispatch roomList using redux
-      console.log("HERE ====", data);
       setRoomList(data)
     })
-
-    console.log('socket changed')
     return () => {
-      // Clean up the socket connection when the component unmounts
-      // socket.disconnect()
+      socket.off('connect')
+      socket.off('roomList')
     }
-  }, [socket.connected])
+  }, [])
   return (
     <Layout>
       <div className='flex justify-center h-full'>

@@ -31,39 +31,6 @@ const io = new Server(httpServer, {
 	},
 });
 
-/**
- * This function let you get public room list with user list in each room
- */
-function getPublicRoomList() {
-	const {rooms} = io.sockets.adapter;
-	const publicRooms:Room[] = [];
-	
-	rooms.forEach((ids, name) => {
-		// Public room has a name not hashed and not in ids
-		if (!isPrivateRoom(ids, name)) {
-			const players = Array.from(ids).map((id) => userList.get(id)) as Player[];
-			if (players) {
-				publicRooms.push({
-					name,
-					status: RoomStatus.WAITING,
-					players
-				});
-			}
-		}
-	})
-	return publicRooms
-}
-
-/**
- * This function let you know if a room is private or not
- * When a room is private, it has a name hashed and a socket.id in ids
- */
-function isPrivateRoom(setInstance:Set<string>, roomName:string):boolean {
-	const setIter = setInstance.values();
-
-	return setIter.next().value === roomName;
-}
-
 io.on('connection', (socket) => {
 	socket.on('getRoomList', () => {
 		socket.emit('roomList', getPublicRoomList());
@@ -77,14 +44,90 @@ io.on('connection', (socket) => {
 			status: PlayerStatus.WAITING,
 		}
 		userList.set(socket.id, currentPlayer);
+
 		// join room
 		socket.join(roomName);
+		io.emit('roomList', getPublicRoomList());
+
+		// customDebug("joinRoom <<after>>", roomName, socket.id);
 	})
-	socket.on('disconnecting', (reason) => {
+	socket.on('leaveRoom', (data) => {
+		const {roomName} = data;
+
+		// customDebug("leaveRoom <<before>>", roomName, socket.id);
+
+		socket.leave(roomName);
 		userList.delete(socket.id);
 		io.emit('roomList', getPublicRoomList());
-		console.log("disconnecting", reason)
+
+		// customDebug("leaveRoom <<after>>", roomName, socket.id);
+	})
+	socket.on('disconnecting', (reason) => {
+		// customDebug("Disconnecting <<before>>", undefined, socket.id);
+
+		userList.delete(socket.id);
+		io.emit('roomList', getPublicRoomList());
+
+		// customDebug("Disconnecting <<after>>", undefined, socket.id);
 	})
 });
 //#endregion
 
+
+//#region Utils
+/**
+ * This function let you get a player by socket.id
+ */
+function getPlayerBySocketId(socketId:string):Player {
+	return userList.get(socketId);
+}
+
+/**
+ * This function let you get public room list with user list in each room
+ */
+function getPublicRoomList() {
+	const {rooms} = io.sockets.adapter;
+	const publicRooms:Room[] = [];
+	
+	rooms.forEach((ids, name) => {
+		// Public room has a name not hashed and not in ids
+		if (!isPrivateRoom(ids, name)) {
+			const players = Array.from(ids)
+				.filter((id) => userList.has(id))
+				.map((id) => userList.get(id)) as Player[];
+			if (players) {
+				publicRooms.push({
+					name,
+					status: RoomStatus.WAITING,
+					players
+				});
+			}
+		}
+	})
+	return publicRooms
+}
+
+
+/**
+ * This function let you know if a room is private or not
+ * When a room is private, it has a name hashed and a socket.id in ids
+ */
+function isPrivateRoom(setInstance:Set<string>, roomName:string):boolean {
+	const setIter = setInstance.values();
+
+	return setIter.next().value === roomName;
+}
+
+/**
+ * This function is used to debug
+ */
+function customDebug(eventName:string, roomName?:string, socketId?:string) {
+		console.log("=====================================");
+		console.log(`[${eventName}]`)
+		console.log("Current RoomName:", roomName)
+		console.log("Current user:", getPlayerBySocketId(socketId));
+		console.log("UserList:", userList)
+		console.log("Public room List:", JSON.stringify(getPublicRoomList()));
+		console.log("=====================================");
+}
+//#endregion

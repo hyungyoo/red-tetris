@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
-import { io } from 'socket.io-client'
 import { useSocket } from '../utils/hooks/useSocket'
 import Section from '../components/Section'
 import DefaultButton from '../components/DefaultButton'
@@ -19,9 +18,10 @@ function GamePage() {
   useEffect(() => {
     socket.emit("joinRoom", {roomName, userName});
     return () => {
-      //TODO: leave room emit when component unmounted
-      // Clean up the socket connection when the component unmounts
-      // socket.disconnect()
+    //TODO: leave room emit when component unmounted
+      socket.emit("leaveRoom", {roomName});
+    // Clean up the socket connection when the component unmounts
+    // socket.disconnect()
     }
   }, [])
 
