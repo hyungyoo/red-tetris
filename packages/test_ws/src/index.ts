@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { Server, Socket } from 'socket.io';
 import cors from 'cors';
-import {RoomStatus, Player, Room, PlayerStatus} from "@red-tetris/common"
+import { RoomStatus, Player, Room, PlayerStatus } from "@red-tetris/common"
 
 dotenv.config();
 
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
 		socket.emit('roomList', getPublicRoomList());
 	})
 	socket.on('joinRoom', (data) => {
-		const {roomName, userName} = data;
+		const { roomName, userName } = data;
 
 		// save userName with socket.id
 		const currentPlayer = {
@@ -47,16 +47,20 @@ io.on('connection', (socket) => {
 
 		// join room
 		socket.join(roomName);
+		console.debug(`${getPlayerBySocketId(socket.id)?.name} has joined the room: ${roomName}\n`);
+		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
 		io.emit('roomList', getPublicRoomList());
 
 		// customDebug("joinRoom <<after>>", roomName, socket.id);
 	})
 	socket.on('leaveRoom', (data) => {
-		const {roomName} = data;
+		const { roomName } = data;
 
 		// customDebug("leaveRoom <<before>>", roomName, socket.id);
 
 		socket.leave(roomName);
+		console.debug(`${getPlayerBySocketId(socket.id)?.name} has left the room: ${roomName}\n`);
+		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
 		userList.delete(socket.id);
 		io.emit('roomList', getPublicRoomList());
 
@@ -78,7 +82,7 @@ io.on('connection', (socket) => {
 /**
  * This function let you get a player by socket.id
  */
-function getPlayerBySocketId(socketId:string):Player {
+function getPlayerBySocketId(socketId: string): Player {
 	return userList.get(socketId);
 }
 
@@ -86,9 +90,9 @@ function getPlayerBySocketId(socketId:string):Player {
  * This function let you get public room list with user list in each room
  */
 function getPublicRoomList() {
-	const {rooms} = io.sockets.adapter;
-	const publicRooms:Room[] = [];
-	
+	const { rooms } = io.sockets.adapter;
+	const publicRooms: Room[] = [];
+
 	rooms.forEach((ids, name) => {
 		// Public room has a name not hashed and not in ids
 		if (!isPrivateRoom(ids, name)) {
@@ -107,12 +111,23 @@ function getPublicRoomList() {
 	return publicRooms
 }
 
+/**
+ * This function let you get public room list with user list in each room
+ */
+function getRoomInfo(roomName: string) {
+	const room = io.sockets.adapter.rooms.get(roomName);
+
+	if (room)
+		return Array.from(room).map((id) => userList.get(id)) as Player[];
+	return [] as Player[];
+}
+
 
 /**
  * This function let you know if a room is private or not
  * When a room is private, it has a name hashed and a socket.id in ids
  */
-function isPrivateRoom(setInstance:Set<string>, roomName:string):boolean {
+function isPrivateRoom(setInstance: Set<string>, roomName: string): boolean {
 	const setIter = setInstance.values();
 
 	return setIter.next().value === roomName;
@@ -121,13 +136,13 @@ function isPrivateRoom(setInstance:Set<string>, roomName:string):boolean {
 /**
  * This function is used to debug
  */
-function customDebug(eventName:string, roomName?:string, socketId?:string) {
-		console.log("=====================================");
-		console.log(`[${eventName}]`)
-		console.log("Current RoomName:", roomName)
-		console.log("Current user:", getPlayerBySocketId(socketId));
-		console.log("UserList:", userList)
-		console.log("Public room List:", JSON.stringify(getPublicRoomList()));
-		console.log("=====================================");
+function customDebug(eventName: string, roomName?: string, socketId?: string) {
+	console.log("=====================================");
+	console.log(`[${eventName}]`)
+	console.log("Current RoomName:", roomName)
+	console.log("Current user:", getPlayerBySocketId(socketId));
+	console.log("UserList:", userList)
+	console.log("Public room List:", JSON.stringify(getPublicRoomList()));
+	console.log("=====================================");
 }
 //#endregion
