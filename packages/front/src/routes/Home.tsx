@@ -5,7 +5,7 @@ import RoomList from './home/RoomList'
 import { Room } from '@red-tetris/common'
 import { useSocket } from '../utils/hooks/useSocket'
 
-function Home() {
+function HomePage() {
   const { socket } = useSocket()
   // use Redux instead of useState
   const [roomList, setRoomList] = useState<Room[]>([])
@@ -15,7 +15,6 @@ function Home() {
     socket.on('connect', () => {
       socket.emit('getRoomList')
     })
-
     socket.on('roomList', data => {
       // TODO: dispatch roomList using redux
       setRoomList(data)
@@ -24,6 +23,7 @@ function Home() {
       socket.off('connect')
       socket.off('roomList')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <Layout>
@@ -35,4 +35,4 @@ function Home() {
   )
 }
 
-export default Home
+export default HomePage

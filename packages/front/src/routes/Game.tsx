@@ -1,11 +1,16 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
 import Section from '../components/Section'
 import DefaultButton from '../components/DefaultButton'
+import { Player } from '@red-tetris/common'
 
+//FIXME: this page render 2 times when the user join a room (join => leave => join)
+//FIXME: there is way to render only once?
 function GamePage() {
+  const [users, setUsers] = useState<Player[]>([])
+
   const { slug } = useParams()
   const { socket } = useSocket()
   const navigate = useNavigate()
@@ -16,12 +21,15 @@ function GamePage() {
   const userName = match?.[2] || 'Anonymous'
 
   useEffect(() => {
-    socket.emit("joinRoom", {roomName, userName});
+    //when user join game page, emit joinRoom event
+    socket.emit('joinRoom', { roomName, userName })
+    socket.on('roomInfo', players => {
+      setUsers(players)
+    })
     return () => {
-    //TODO: leave room emit when component unmounted
-      socket.emit("leaveRoom", {roomName});
-    // Clean up the socket connection when the component unmounts
-    // socket.disconnect()
+      //when user leave game page, emit leaveRoom event
+      socket.emit('leaveRoom', { roomName })
+      socket.off('roomInfo')
     }
   }, [])
 
@@ -34,11 +42,13 @@ function GamePage() {
   return (
     <Layout>
       <DefaultButton label={'Back'} onClick={() => navigate('/')} />
-      <div className='flex justify-center'>
-        <Section title='Game'>
-          <h1>Room name: {roomName}</h1>
-          <h1>User name: {userName}</h1>
-        </Section>
+      <div className='flex justify-center w-full'>
+        {users &&
+          users.map((user, i) => (
+            <Section key={`user[${i}]`} title={`${user.name}(${user.status})`}>
+              <div className='w-96 h-full'></div>
+            </Section>
+          ))}
       </div>
     </Layout>
   )
