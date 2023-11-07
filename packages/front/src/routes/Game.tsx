@@ -5,6 +5,7 @@ import { useSocket } from '../utils/hooks/useSocket'
 import Section from '../components/Section'
 import DefaultButton from '../components/DefaultButton'
 import { Player } from '@red-tetris/common'
+import Tetris from './game/Tetris'
 
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?
@@ -43,12 +44,7 @@ function GamePage() {
     <Layout>
       <DefaultButton label={'Back'} onClick={() => navigate('/')} />
       <div className='flex justify-center w-full'>
-        {users &&
-          users.map((user, i) => (
-            <Section key={`user[${i}]`} title={`${user.name}(${user.status})`}>
-              <div className='w-96 h-full'></div>
-            </Section>
-          ))}
+        {users && users.map((user, i) => <Tetris key={`player[${i}]`} player={user} />)}
       </div>
     </Layout>
   )

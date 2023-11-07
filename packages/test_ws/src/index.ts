@@ -42,12 +42,16 @@ io.on('connection', (socket) => {
 		const currentPlayer = {
 			name: userName,
 			status: PlayerStatus.WAITING,
+			//FIXME: create a enum for color in type.ts is better or use defined tailwinds color - ex: send color: 'red-500' to client
+			tetrisMap:{'5-10': {color: '#ff0000'}},
 		}
 		userList.set(socket.id, currentPlayer);
 
 		// join room
 		socket.join(roomName);
+
 		console.debug(`${getPlayerBySocketId(socket.id)?.name} has joined the room: ${roomName}\n`);
+
 		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
 		io.emit('roomList', getPublicRoomList());
 
