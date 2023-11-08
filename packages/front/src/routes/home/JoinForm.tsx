@@ -33,7 +33,7 @@ function JoinForm() {
   }
 
   return (
-    <Section title='Welcome'>
+    <Section title='Welcome' center>
       <Section title='Join Room'>
         <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center w-96 h-full'>
           <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />

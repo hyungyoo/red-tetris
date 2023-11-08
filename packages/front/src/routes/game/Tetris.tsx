@@ -12,7 +12,6 @@ function Tetris(props: TetrisProps) {
   const { name, status, tetrisMap } = player
   const BLOCK_SIZE = me ? 8 : 4
   const GRID_WIDTH = me ? 80 : 40
-  const GRID_HEIGHT = me ? 'full' : '1/2'
 
   const drawMap = useCallback(() => {
     if (!tetrisMap) return null
@@ -35,8 +34,8 @@ function Tetris(props: TetrisProps) {
   }, [tetrisMap])
 
   return (
-    <Section title={`${name}(${status})`}>
-      <div className={`w-${GRID_WIDTH} h-${GRID_HEIGHT} grid grid-cols-10`}>{drawMap()}</div>
+    <Section title={`${name}(${status})`} center>
+      <div className={`w-${GRID_WIDTH} grid grid-cols-10 gap-0`}>{drawMap()}</div>
     </Section>
   )
 }

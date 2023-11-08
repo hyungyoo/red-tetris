@@ -1,6 +1,7 @@
 interface SectionProps {
   title: string
   children: React.ReactNode
+  center?: boolean
 }
 
 function Section(props: SectionProps) {
@@ -9,7 +10,7 @@ function Section(props: SectionProps) {
       <h2 className='capitalize absolute -top-3 left-2 bg-white dark:bg-neutral-900 font-semibold px-2'>
         {props.title}
       </h2>
-      {props.children}
+      <div className={`${props.center ? 'flex justify-center items-center' : ''} h-full`}>{props.children}</div>
     </div>
   )
 }
