@@ -1,4 +1,7 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useCallback } from 'react'
+import { useAppDispatch, useAppSelector } from '../redux/hook'
+import { RootState } from '../redux/store'
+import { updateRoomName, updateUserName } from '../redux/reducers/joinSlice'
 
 interface InputFieldProps {
   label: string
@@ -10,14 +13,13 @@ interface InputFieldProps {
 function InputField(props: InputFieldProps) {
   const { label, type, name, value, setValue } = props
 
-  // TODO: replace logic with redux
-  function onChange(e: ChangeEvent<HTMLInputElement>) {
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
-  }
+  }, [])
   return (
     <div className='flex gap-1 justify-between'>
       <label className='capitalize'>{label}</label>
-      <input className='border' type={type} name={name} value={value} onChange={onChange} />
+      <input className='border dark:text-neutral-900' type={type} name={name} value={value} onChange={onChange} />
     </div>
   )
 }
