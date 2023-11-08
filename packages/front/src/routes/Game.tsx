@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
-import Section from '../components/Section'
 import DefaultButton from '../components/DefaultButton'
 import { Player } from '@red-tetris/common'
 import Tetris from './game/Tetris'
@@ -29,15 +28,17 @@ function GamePage() {
     })
     return () => {
       //when user leave game page, emit leaveRoom event
-      socket.emit('leaveRoom', { roomName })
+      // socket.emit('leaveRoom', { roomName })
       socket.off('roomInfo')
     }
   }, [])
 
   useEffect(() => {
-    if (match === null)
+    if (match === null) {
       // slug did not match the regex
+      socket.emit('leaveRoom', { roomName })
       navigate('/')
+    }
   }, [slug, match, navigate])
 
   return (

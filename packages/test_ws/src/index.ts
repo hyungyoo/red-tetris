@@ -43,14 +43,15 @@ io.on('connection', (socket) => {
 			name: userName,
 			status: PlayerStatus.WAITING,
 			//FIXME: create a enum for color in type.ts is better or use defined tailwinds color - ex: send color: 'red-500' to client
-			tetrisMap:{'5-10': {color: '#ff0000'}},
+			tetrisMap: { '5-2': { color: '#ff0000' } },
 		}
 		userList.set(socket.id, currentPlayer);
 
 		// join room
 		socket.join(roomName);
 
-		console.debug(`${getPlayerBySocketId(socket.id)?.name} has joined the room: ${roomName}\n`);
+		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has joined the room: ${roomName}\n`);
+		customDebug('JOIN', roomName, socket.id);
 
 		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
 		io.emit('roomList', getPublicRoomList());
@@ -63,7 +64,7 @@ io.on('connection', (socket) => {
 		// customDebug("leaveRoom <<before>>", roomName, socket.id);
 
 		socket.leave(roomName);
-		console.debug(`${getPlayerBySocketId(socket.id)?.name} has left the room: ${roomName}\n`);
+		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has left the room: ${roomName}\n`);
 		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
 		userList.delete(socket.id);
 		io.emit('roomList', getPublicRoomList());
@@ -72,6 +73,16 @@ io.on('connection', (socket) => {
 	})
 	socket.on('disconnecting', (reason) => {
 		// customDebug("Disconnecting <<before>>", undefined, socket.id);
+
+		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has disconnected\n`);
+
+		// leave all rooms
+		for (const roomName of socket.rooms) {
+			if (roomName !== socket.id) {
+				socket.leave(roomName)
+				io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
+			}
+		}
 
 		userList.delete(socket.id);
 		io.emit('roomList', getPublicRoomList());
@@ -146,7 +157,7 @@ function customDebug(eventName: string, roomName?: string, socketId?: string) {
 	console.log("Current RoomName:", roomName)
 	console.log("Current user:", getPlayerBySocketId(socketId));
 	console.log("UserList:", userList)
-	console.log("Public room List:", JSON.stringify(getPublicRoomList()));
+	console.log("Public room List:", JSON.stringify(getPublicRoomList(), null, 3));
 	console.log("=====================================");
 }
 //#endregion
