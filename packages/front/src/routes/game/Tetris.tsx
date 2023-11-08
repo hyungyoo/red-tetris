@@ -4,11 +4,15 @@ import { useCallback } from 'react'
 
 interface TetrisProps {
   player: Player
+  me?: boolean
 }
 //TODO
 function Tetris(props: TetrisProps) {
-  const { player } = props
+  const { player, me } = props
   const { name, status, tetrisMap } = player
+  const BLOCK_SIZE = me ? 8 : 4
+  const GRID_WIDTH = me ? 80 : 40
+  const GRID_HEIGHT = me ? 'full' : '1/2'
 
   const drawMap = useCallback(() => {
     if (!tetrisMap) return null
@@ -21,7 +25,7 @@ function Tetris(props: TetrisProps) {
         map.push(
           <div
             key={`${x}-${y}`}
-            className={`${x}-${y} w-8 h-8 border border-gray-100`}
+            className={`${x}-${y} w-${BLOCK_SIZE} h-${BLOCK_SIZE} border border-gray-100`}
             style={{ backgroundColor: current ? current.color : 'inherit' }}
           />
         )
@@ -32,7 +36,7 @@ function Tetris(props: TetrisProps) {
 
   return (
     <Section title={`${name}(${status})`}>
-      <div className='w-80 h-full grid grid-cols-10'>{drawMap()}</div>
+      <div className={`w-${GRID_WIDTH} h-${GRID_HEIGHT} grid grid-cols-10`}>{drawMap()}</div>
     </Section>
   )
 }

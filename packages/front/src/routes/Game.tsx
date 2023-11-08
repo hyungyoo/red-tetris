@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
@@ -19,6 +19,13 @@ function GamePage() {
   const match = slug?.match(regex)
   const roomName = match?.[1]
   const userName = match?.[2] || 'Anonymous'
+  const currentUser = users.find(user => user.name === userName)
+
+  const GRID_COL = useMemo(() => Math.floor(users.length / 2), [users.length])
+  const handleOnLeaveRoom = useCallback(() => {
+    socket.emit('leaveRoom', { roomName })
+    navigate('/')
+  }, [navigate, roomName, socket])
 
   useEffect(() => {
     //when user join game page, emit joinRoom event
@@ -28,24 +35,27 @@ function GamePage() {
     })
     return () => {
       //when user leave game page, emit leaveRoom event
-      // socket.emit('leaveRoom', { roomName })
       socket.off('roomInfo')
     }
   }, [])
 
   useEffect(() => {
     if (match === null) {
-      // slug did not match the regex
-      socket.emit('leaveRoom', { roomName })
-      navigate('/')
+      handleOnLeaveRoom()
     }
-  }, [slug, match, navigate])
+  }, [slug, match, navigate, handleOnLeaveRoom])
 
   return (
     <Layout>
-      <DefaultButton label={'Back'} onClick={() => navigate('/')} />
+      <DefaultButton label={'Back'} onClick={handleOnLeaveRoom} />
       <div className='flex justify-center w-full'>
-        {users && users.map((user, i) => <Tetris key={`player[${i}]`} player={user} />)}
+        <div className={`grid grid-cols-${GRID_COL} h-1/2`}>
+          {users &&
+            users
+              .filter(user => user.name !== userName)
+              .map((user, i) => <Tetris key={`player[${i}]`} player={user} />)}
+        </div>
+        {users && currentUser && <Tetris player={currentUser} me />}
       </div>
     </Layout>
   )
