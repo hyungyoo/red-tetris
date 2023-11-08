@@ -17,7 +17,6 @@ function Navbar() {
   }, [darkToggle])
   function toggleDarkMode() {
     localStorage.theme = darkToggle ? 'light' : 'dark'
-    console.log(darkToggle)
     setDarkToggle(!darkToggle)
   }
   return (
