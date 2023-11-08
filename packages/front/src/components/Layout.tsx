@@ -33,7 +33,7 @@ function Layout({ children }: React.PropsWithChildren) {
   return (
     <div className='w-full h-screen relative dark:bg-neutral-900 dark:text-white'>
       <Navbar />
-      <div className='w-full h-screen absolute top-0 left-0 p-20'>{children}</div>
+      <div className='w-full h-screen absolute top-0 left-0 p-24'>{children}</div>
     </div>
   )
 }
