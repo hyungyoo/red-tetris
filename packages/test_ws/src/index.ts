@@ -45,24 +45,24 @@ io.on('connection', (socket) => {
 			//FIXME: create a enum for color in type.ts is better or use defined tailwinds color - ex: send color: 'red-500' to client
 			tetrisMap:
 			{
-				'1-10': { color: '#eee' },
-				'1-11': { color: '#eee' },
-				'2-9': { color: '#eee' },
-				'2-11': { color: '#eee' },
-				'3-8': { color: '#eee' },
-				'3-11': { color: '#eee' },
-				'4-7': { color: '#eee' },
-				'4-11': { color: '#eee' },
-				'4-12': { color: '#eee' },
-				'6-7': { color: '#eee' },
-				'6-10': { color: '#eee' },
-				'6-11': { color: '#eee' },
-				'7-7': { color: '#eee' },
-				'7-9': { color: '#eee' },
-				'7-11': { color: '#eee' },
-				'8-7': { color: '#eee' },
-				'8-8': { color: '#eee' },
-				'8-11': { color: '#eee' }
+				'1-10': { color: '#333' },
+				'1-11': { color: '#333' },
+				'2-9': { color: '#333' },
+				'2-11': { color: '#333' },
+				'3-8': { color: '#333' },
+				'3-11': { color: '#333' },
+				'4-7': { color: '#333' },
+				'4-11': { color: '#333' },
+				'4-12': { color: '#333' },
+				'6-7': { color: '#333' },
+				'6-10': { color: '#333' },
+				'6-11': { color: '#333' },
+				'7-7': { color: '#333' },
+				'7-9': { color: '#333' },
+				'7-11': { color: '#333' },
+				'8-7': { color: '#333' },
+				'8-8': { color: '#333' },
+				'8-11': { color: '#333' }
 			}
 
 		}

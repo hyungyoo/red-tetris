@@ -14,16 +14,12 @@ function JoinForm() {
   const { roomName, userName } = useAppSelector((state: RootState) => state.join)
 
   const setRoomName = useCallback(
-    (value: string) => {
-      disatch(updateRoomName(value))
-    },
+    (value: string) => disatch(updateRoomName(value)) ,
     [disatch]
   )
 
   const setUserName = useCallback(
-    (value: string) => {
-      disatch(updateUserName(value))
-    },
+    (value: string) => disatch(updateUserName(value)) ,
     [disatch]
   )
 
