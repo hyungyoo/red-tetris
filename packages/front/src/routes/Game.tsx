@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
 import DefaultButton from '../components/DefaultButton'
-import { Player } from '@red-tetris/common'
+import { Player, Event } from '@red-tetris/common'
 import Tetris from './game/Tetris'
-import {Event} from "@red-tetris/common"
 
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?

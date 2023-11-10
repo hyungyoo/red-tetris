@@ -7,7 +7,7 @@ import { RoomStatus, Player, Room, PlayerStatus } from "@red-tetris/common"
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.TEST_PORT;
+const port = process.env.REACT_APP_TEST_PORT;
 const userList = new Map();
 
 
