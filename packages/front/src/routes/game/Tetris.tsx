@@ -24,7 +24,7 @@ function Tetris(props: TetrisProps) {
           <div
             key={`${x}-${y}`}
             className={`${x}-${y} border border-gray-100`}
-            style={{ backgroundColor: current ? current.color : 'inherit', width:BLOCK_SIZE, height:BLOCK_SIZE }}
+            style={{ background: current ? `linear-gradient(300deg, ${current.color}, #eee)` : 'inherit', width:BLOCK_SIZE, height:BLOCK_SIZE }}
           />
         )
       }
