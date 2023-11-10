@@ -19,9 +19,14 @@ function HomePage() {
       // TODO: dispatch roomList using redux
       setRoomList(data)
     })
+    socket.on("test2", data => {
+      console.log(data)
+    })
+    
     return () => {
       socket.off(Event.Connect)
       socket.off(Event.RoomList)
+      socket.off("test2")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -29,7 +34,10 @@ function HomePage() {
     <Layout>
       <div className='flex justify-center items-center h-full'>
         <JoinForm />
-        <RoomList rooms={roomList} />
+        {roomList &&<RoomList rooms={roomList} />}
+        <button onClick={()=> {
+          socket.emit("test", "hello test")
+        }}>test</button>
       </div>
     </Layout>
   )

@@ -1,8 +1,10 @@
 import {
+  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
   WsException,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Event } from '@red-tetris/common';
 import { Server, Socket } from 'socket.io';
@@ -25,8 +27,10 @@ export class GameGateway {
   }
 
   @SubscribeMessage(Event.GetRoomList)
-  handleGetRoomList(client: any, payload: any): string {
+  handleGetRoomList(@MessageBody() data: unknown): WsResponse<unknown> {
     console.log(`${Event.GetRoomList}`)
+    console.log(data)
+    
     return;
   }
 
@@ -34,5 +38,12 @@ export class GameGateway {
   handleDisconnecting(client: any, payload: any): string {
     console.log(`${Event.Disconnecting}`)
     return;
+  }
+
+  @SubscribeMessage('test')
+  handleTest(@MessageBody() data: unknown): WsResponse<unknown> {
+    console.log(data)
+    this.server.emit("test2", "all")
+    return { event :"test2", data: "test! front"};
   }
 }
