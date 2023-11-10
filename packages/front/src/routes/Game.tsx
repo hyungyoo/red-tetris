@@ -5,6 +5,7 @@ import { useSocket } from '../utils/hooks/useSocket'
 import DefaultButton from '../components/DefaultButton'
 import { Player } from '@red-tetris/common'
 import Tetris from './game/Tetris'
+import {Event} from "@red-tetris/common"
 
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?
@@ -23,19 +24,19 @@ function GamePage() {
 
   const GRID_COL = useMemo(() => Math.floor(users.length / 2), [users.length])
   const handleOnLeaveRoom = useCallback(() => {
-    socket.emit('leaveRoom', { roomName })
+    socket.emit(Event.LeaveRoom, { roomName })
     navigate('/')
   }, [navigate, roomName, socket])
 
   useEffect(() => {
     //when user join game page, emit joinRoom event
-    socket.emit('joinRoom', { roomName, userName })
-    socket.on('roomInfo', players => {
+    socket.emit(Event.JoinRoom, { roomName, userName })
+    socket.on(Event.RoomInfo, players => {
       setUsers(players)
     })
     return () => {
       //when user leave game page, emit leaveRoom event
-      socket.off('roomInfo')
+      socket.off(Event.RoomInfo)
     }
   }, [])
 
