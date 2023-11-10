@@ -4,5 +4,6 @@ export const enum Event {
     GetRoomList = 'getRoomList',
     RoomInfo = "roomInfo",
     RoomList = "roomList",
-    Connect = "connect"
+    Connect = "connect",
+    Disconnecting = "disconnecting"
 }
