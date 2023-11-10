@@ -10,8 +10,7 @@ interface TetrisProps {
 function Tetris(props: TetrisProps) {
   const { player, me } = props
   const { name, status, tetrisMap } = player
-  const BLOCK_SIZE = me ? 8 : 4
-  const GRID_WIDTH = me ? 80 : 40
+  const BLOCK_SIZE = me ? '1.5rem' : '0.75rem'
 
   const drawMap = useCallback(() => {
     if (!tetrisMap) return null
@@ -24,18 +23,18 @@ function Tetris(props: TetrisProps) {
         map.push(
           <div
             key={`${x}-${y}`}
-            className={`${x}-${y} w-${BLOCK_SIZE} h-${BLOCK_SIZE} border border-gray-100`}
-            style={{ backgroundColor: current ? current.color : 'inherit' }}
+            className={`${x}-${y} border border-gray-100`}
+            style={{ backgroundColor: current ? current.color : 'inherit', width:BLOCK_SIZE, height:BLOCK_SIZE }}
           />
         )
       }
     }
     return map
-  }, [tetrisMap])
+  }, [tetrisMap, BLOCK_SIZE])
 
   return (
     <Section title={`${name}(${status})`} center>
-      <div className={`w-${GRID_WIDTH} grid grid-cols-10 gap-0`}>{drawMap()}</div>
+      <div className={`w-full h-full grid grid-cols-10 gap-0`}>{drawMap()}</div>
     </Section>
   )
 }

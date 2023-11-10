@@ -27,7 +27,7 @@ function HomePage() {
   }, [])
   return (
     <Layout>
-      <div className='flex justify-center h-full'>
+      <div className='flex justify-center items-center h-full'>
         <JoinForm />
         <RoomList rooms={roomList} />
       </div>
