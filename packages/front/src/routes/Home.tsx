@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import JoinForm from './home/JoinForm'
 import RoomList from './home/RoomList'
-import { Room } from '@red-tetris/common'
+import { Event, Room } from '@red-tetris/common'
 import { useSocket } from '../utils/hooks/useSocket'
 
 function HomePage() {
@@ -12,16 +12,16 @@ function HomePage() {
 
   useEffect(() => {
     // Set up event listeners or perform actions with the socket
-    socket.on('connect', () => {
-      socket.emit('getRoomList')
+    socket.on(Event.Connect, () => {
+      socket.emit(Event.GetRoomList)
     })
-    socket.on('roomList', data => {
+    socket.on(Event.RoomList, data => {
       // TODO: dispatch roomList using redux
       setRoomList(data)
     })
     return () => {
-      socket.off('connect')
-      socket.off('roomList')
+      socket.off(Event.Connect)
+      socket.off(Event.RoomList)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
