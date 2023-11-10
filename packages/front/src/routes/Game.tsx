@@ -48,8 +48,8 @@ function GamePage() {
   return (
     <Layout>
       <DefaultButton label={'Back'} onClick={handleOnLeaveRoom} />
-      <div className='flex justify-center w-full'>
-        <div className={`grid grid-cols-${GRID_COL} h-1/2`}>
+      <div className={`flex justify-center w-full h-1/2`}>
+        <div style={{display:'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))`}}>
           {users &&
             users
               .filter(user => user.name !== userName)
