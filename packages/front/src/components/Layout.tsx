@@ -18,7 +18,6 @@ function Navbar() {
     dispatch(updateName(''))
     navigate('/')
   }, [navigate, name, socket, dispatch])
-  console.log(name)
 
   return (
     <nav className='w-full flex justify-between z-10 top-0 left-0 p-4 absolute'>
