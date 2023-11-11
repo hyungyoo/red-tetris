@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
-import DefaultButton from '../components/DefaultButton'
-import { Player, Event } from '@red-tetris/common'
+import { Event, Room } from '@red-tetris/common'
 import Tetris from './game/Tetris'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
+import { updateRoom } from '../redux/reducers/roomSlice'
 
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?
 function GamePage() {
-  const [users, setUsers] = useState<Player[]>([])
+  // const [users, setUsers] = useState<Player[]>([])
+  const { players } = useSelector((state: RootState) => state.room)
+  const dispatch = useDispatch()
 
   const { slug } = useParams()
   const { socket } = useSocket()
@@ -19,9 +23,9 @@ function GamePage() {
   const match = slug?.match(regex)
   const roomName = match?.[1]
   const userName = match?.[2] || 'Anonymous'
-  const currentUser = users.find(user => user.name === userName)
+  const currentUser = players.find(player => player.name === userName)
 
-  const GRID_COL = useMemo(() => Math.floor(users.length / 2), [users.length])
+  const GRID_COL = useMemo(() => Math.floor(players.length / 2), [players.length])
   const handleOnLeaveRoom = useCallback(() => {
     socket.emit(Event.LeaveRoom, { roomName })
     navigate('/')
@@ -30,14 +34,14 @@ function GamePage() {
   useEffect(() => {
     //when user join game page, emit joinRoom event
     socket.emit(Event.JoinRoom, { roomName, userName })
-    socket.on(Event.RoomInfo, players => {
-      setUsers(players)
+    socket.on(Event.RoomInfo, (room: Room) => {
+      dispatch(updateRoom(room))
     })
     return () => {
       //when user leave game page, emit leaveRoom event
       socket.off(Event.RoomInfo)
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (match === null) {
@@ -47,16 +51,13 @@ function GamePage() {
 
   return (
     <Layout>
-      <DefaultButton label={'Back'} onClick={handleOnLeaveRoom} />
-      <div className={`flex justify-center w-full h-1/2`}>
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
-          {users &&
-            users
-              .filter(user => user.name !== userName)
-              .map((user, i) => <Tetris key={`player[${i}]`} player={user} />)}
-        </div>
-        {users && currentUser && <Tetris player={currentUser} me />}
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
+        {players &&
+          players
+            .filter(player => player.name !== userName)
+            .map((player, i) => <Tetris key={`player[${i}]`} player={player} />)}
       </div>
+      {players && currentUser && <Tetris player={currentUser} me />}
     </Layout>
   )
 }
