@@ -34,10 +34,10 @@ function HomePage() {
     <Layout>
       <div className='flex justify-center items-center h-full'>
         <JoinForm />
-        {roomList &&<RoomList rooms={roomList} />}
-        <button onClick={()=> {
+        <RoomList rooms={roomList} />
+        {/* <button onClick={()=> {
           socket.emit("test", "hello test")
-        }}>test</button>
+        }}>test</button> */}
       </div>
     </Layout>
   )

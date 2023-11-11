@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
 
-const socket = io(`http://localhost:${process.env.REACT_APP_BACK_PORT}/`);
+// FIXME: switch this next line until backend server is stabilised.
+// const socket = io(`http://localhost:${process.env.REACT_APP_BACK_PORT}`);
+const socket = io(`http://localhost:${process.env.REACT_APP_TEST_PORT}`);
 
 export function useSocket() {
 	socket.on("error", function (e) {
