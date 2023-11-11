@@ -26,7 +26,7 @@ const httpServer = app.listen(port, () => {
 //#region Web Socket Server with Socket.io
 const io = new Server(httpServer, {
 	cors: {
-		origin: `http://localhost:${process.env.FRONT_PORT}`, // Allow requests from your React client
+		origin: `http://localhost:${process.env.REACT_APP_FRONT_PORT}`, // Allow requests from your React client
 		methods: ["GET", "POST"],
 	},
 });
@@ -150,12 +150,13 @@ function getPublicRoomList() {
 /**
  * This function let you get public room list with user list in each room
  */
-function getRoomInfo(roomName: string) {
+function getRoomInfo(roomName: string){
 	const room = io.sockets.adapter.rooms.get(roomName);
+	const players = room ? (Array.from(room).map((id) => userList.get(id))as Player[]) : [];
+	const status = players.find((player) => player.status === PlayerStatus.PLAYING) ? RoomStatus.PLAYING : RoomStatus.WAITING;
 
-	if (room)
-		return Array.from(room).map((id) => userList.get(id)) as Player[];
-	return [] as Player[];
+	return {name:roomName, status, players};
+
 }
 
 

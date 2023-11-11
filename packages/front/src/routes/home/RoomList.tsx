@@ -3,8 +3,6 @@ import { Room } from '@red-tetris/common'
 
 interface RoomListProps {
   rooms: Room[]
-  //   onJoin: (roomId: string) => void
-  //   onCreate: () => void
 }
 function RoomList(props: RoomListProps) {
   const { rooms } = props

@@ -3,6 +3,8 @@ import thunkMiddleware from 'redux-thunk'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer, persistStore } from 'redux-persist'
 import joinSlice from './reducers/joinSlice'
+import roomListSlice from './reducers/roomListSlice'
+import roomSlice from './reducers/roomSlice'
 
 const persistConfig = {
   key: 'root',
@@ -10,7 +12,9 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-  join: joinSlice
+  join: joinSlice,
+  roomList: roomListSlice,
+  room: roomSlice
 })
 
 // const persistedReducer = persistReducer(persistConfig, rootReducer)

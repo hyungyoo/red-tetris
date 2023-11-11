@@ -1,7 +1,4 @@
 import { ChangeEvent, useCallback } from 'react'
-import { useAppDispatch, useAppSelector } from '../redux/hook'
-import { RootState } from '../redux/store'
-import { updateRoomName, updateUserName } from '../redux/reducers/joinSlice'
 
 interface InputFieldProps {
   label: string
