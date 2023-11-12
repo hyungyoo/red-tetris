@@ -1,8 +1,10 @@
-import { GAME_MAP_HEIGHT_SIZE, GAME_MAP_WIDTH_SIZE, Player, PlayerStatus } from '@red-tetris/common'
+import { Event, GAME_MAP_HEIGHT_SIZE, GAME_MAP_WIDTH_SIZE, Player, PlayerStatus } from '@red-tetris/common'
 import Section from '../../components/Section'
 import { useCallback, useMemo } from 'react'
 import DefaultButton from '../../components/DefaultButton'
 import { useSocket } from '../../utils/hooks/useSocket'
+import { RootState } from '../../redux/store'
+import { useSelector } from 'react-redux'
 
 interface TetrisProps {
   player: Player
@@ -13,6 +15,7 @@ function Tetris(props: TetrisProps) {
   const { socket } = useSocket()
   const { player, me } = props
   const { name, status, tetrisMap } = player
+  const { name: roomName } = useSelector((state: RootState) => state.room)
   const BLOCK_SIZE = me ? '1.65rem' : '0.75rem'
 
   const drawMap = useCallback(() => {
@@ -39,10 +42,12 @@ function Tetris(props: TetrisProps) {
     return map
   }, [tetrisMap, BLOCK_SIZE])
 
-  const handleOnClickReady = useCallback(() => {
-    //TODO
-    console.log('TO SEND EVENT BACK')
-  }, [])
+  const handleOnChangePlayerStatus = useCallback(() => {
+    socket.emit(Event.ChangePlayerStatus, {
+      roomName,
+      status: status === PlayerStatus.READY ? PlayerStatus.WAITING : PlayerStatus.READY
+    })
+  }, [socket, status, roomName])
 
   const statusDiv = useMemo(() => {
     if (status === PlayerStatus.PLAYING) return null
@@ -57,17 +62,17 @@ function Tetris(props: TetrisProps) {
           flex justify-center items-center flex-col
         `}
       >
-        {me && status !== PlayerStatus.READY && (
+        {me && (
           <DefaultButton
-            label={PlayerStatus.READY}
-            textSize={me ? 'text-lg' : undefined}
-            onClick={handleOnClickReady}
+            label={status === PlayerStatus.READY ? 'Cancel' : PlayerStatus.READY}
+            // textSize={me ? 'text-sm' : undefined}
+            onClick={handleOnChangePlayerStatus}
           />
         )}
         {!me && status}
       </div>
     )
-  }, [status, me, handleOnClickReady])
+  }, [status, me, handleOnChangePlayerStatus])
 
   return (
     <Section title={name} center>

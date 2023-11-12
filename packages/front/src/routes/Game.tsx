@@ -11,7 +11,6 @@ import { updateRoom } from '../redux/reducers/roomSlice'
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?
 function GamePage() {
-  // const [users, setUsers] = useState<Player[]>([])
   const { players } = useSelector((state: RootState) => state.room)
   const dispatch = useDispatch()
 
