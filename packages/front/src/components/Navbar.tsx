@@ -6,7 +6,8 @@ import { useCallback, useMemo } from 'react'
 import { Event } from '@red-tetris/common'
 import { updateName } from '../redux/reducers/roomSlice'
 /* eslint import/no-webpack-loader-syntax: off */
-import logo from '!file-loader!../assets/images/42_logo.svg'
+import logo_white from '!file-loader!../assets/images/42_white.svg'
+import logo_black from '../assets/images/42_black.png'
 
 //TODO: to implement later dark/light toggle
 function Navbar() {
@@ -15,6 +16,9 @@ function Navbar() {
   const { name } = useSelector((state: RootState) => state.room)
   const dispatch = useDispatch()
 
+  const isDark = useMemo(() => window.matchMedia('(prefers-color-scheme: dark)').matches, [])
+
+  console.log(isDark)
   const handleOnLeaveRoom = useCallback(() => {
     socket.emit(Event.LeaveRoom, { roomName: name })
     dispatch(updateName(''))
@@ -29,22 +33,25 @@ function Navbar() {
 
   const leftText = useMemo(() => {
     return isInRoom ? (
-      <div className={`${isInRoom ? 'hover:cursor-pointer' : ''} hover:text-white`} onClick={handleOnClickLeft}>
+      <div
+        className={`${isInRoom ? 'hover:cursor-pointer' : ''} hover:text-neutral-700 dark:hover:text-white`}
+        onClick={handleOnClickLeft}
+      >
         Back
       </div>
     ) : (
-      <img src={logo} alt='logo' className='w-7 h-7' />
+      <img src={isDark ? logo_white : logo_black} alt='logo' className='w-7 h-7' />
     )
-  }, [isInRoom, handleOnClickLeft])
+  }, [isInRoom, handleOnClickLeft, isDark])
 
   const centerText = useMemo(() => {
     return isInRoom ? name : 'RED Tetris'
   }, [isInRoom, name])
 
   return (
-    <nav className='w-full h-10 flex justify-between items-center px-2 transition bg-neutral-700 text-gray-200 hover:bg-neutral-800'>
+    <nav className='w-full h-10 flex justify-between items-center px-2 transition bg-white/30 hover:bg-white/10'>
       {leftText}
-      <div className='hover:text-white'>{centerText}</div>
+      <div className='hover:text-neutral-700 dark:hover:text-white'>{centerText}</div>
       <div className={`w-10 border rounded-full`} onClick={() => {}}>
         <div className={`w-4 h-4 bg-neutral-300 dark:bg-white rounded-full m-0.5`}></div>
       </div>
