@@ -18,7 +18,6 @@ function Navbar() {
 
   const isDark = useMemo(() => window.matchMedia('(prefers-color-scheme: dark)').matches, [])
 
-  console.log(isDark)
   const handleOnLeaveRoom = useCallback(() => {
     socket.emit(Event.LeaveRoom, { roomName: name })
     dispatch(updateName(''))
