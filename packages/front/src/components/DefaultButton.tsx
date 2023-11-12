@@ -10,7 +10,7 @@ function DefaultButton(props: DefaultButtonProps) {
     <button
       type={type}
       onClick={onClick}
-      className={`py-1 px-2 rounded bg-neutral-700 text-white capitalize ${textSize ?? ''}`}
+      className={`py-1 px-2 rounded bg-neutral-700 text-white capitalize ${textSize ?? ''} hover:opacity-80`}
     >
       {label}
     </button>
