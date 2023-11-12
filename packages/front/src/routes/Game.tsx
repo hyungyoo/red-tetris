@@ -41,7 +41,7 @@ function GamePage() {
       //when user leave game page, emit leaveRoom event
       socket.off(Event.RoomInfo)
     }
-  }, [dispatch])
+  }, [dispatch, socket, roomName, userName])
 
   useEffect(() => {
     if (match === null) {
