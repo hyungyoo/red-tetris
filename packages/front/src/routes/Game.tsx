@@ -18,7 +18,7 @@ function GamePage() {
   const { socket } = useSocket()
   const navigate = useNavigate()
 
-  const regex = /^(\w+)(?:\[(.*?)\])?$/
+  const regex = /^([^[]+)(?:\[(.*?)\])?$/
   const match = slug?.match(regex)
   const roomName = match?.[1]
   const userName = match?.[2] || 'Anonymous'
