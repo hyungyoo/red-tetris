@@ -1,6 +1,10 @@
-import { GAME_MAP_HEIGHT_SIZE, GAME_MAP_WIDTH_SIZE, Player } from '@red-tetris/common'
+import { Event, GAME_MAP_HEIGHT_SIZE, GAME_MAP_WIDTH_SIZE, Player, PlayerStatus } from '@red-tetris/common'
 import Section from '../../components/Section'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import DefaultButton from '../../components/DefaultButton'
+import { useSocket } from '../../utils/hooks/useSocket'
+import { RootState } from '../../redux/store'
+import { useSelector } from 'react-redux'
 
 interface TetrisProps {
   player: Player
@@ -8,9 +12,11 @@ interface TetrisProps {
 }
 //TODO
 function Tetris(props: TetrisProps) {
+  const { socket } = useSocket()
   const { player, me } = props
   const { name, status, tetrisMap } = player
-  const BLOCK_SIZE = me ? '1.5rem' : '0.75rem'
+  const { name: roomName } = useSelector((state: RootState) => state.room)
+  const BLOCK_SIZE = me ? '1.65rem' : '0.75rem'
 
   const drawMap = useCallback(() => {
     if (!tetrisMap) return null
@@ -23,8 +29,12 @@ function Tetris(props: TetrisProps) {
         map.push(
           <div
             key={`${x}-${y}`}
-            className={`${x}-${y} border border-gray-100`}
-            style={{ background: current ? `linear-gradient(300deg, ${current.color}, #eee)` : 'inherit', width:BLOCK_SIZE, height:BLOCK_SIZE }}
+            className={`${x}-${y} border border-dotted border-gray-200 dark:border-neutral-700`}
+            style={{
+              background: current ? `linear-gradient(300deg, ${current.color}, #eee)` : 'inherit',
+              width: BLOCK_SIZE,
+              height: BLOCK_SIZE
+            }}
           />
         )
       }
@@ -32,9 +42,42 @@ function Tetris(props: TetrisProps) {
     return map
   }, [tetrisMap, BLOCK_SIZE])
 
+  const handleOnChangePlayerStatus = useCallback(() => {
+    socket.emit(Event.ChangePlayerStatus, {
+      roomName,
+      status: status === PlayerStatus.READY ? PlayerStatus.WAITING : PlayerStatus.READY
+    })
+  }, [socket, status, roomName])
+
+  const statusDiv = useMemo(() => {
+    if (status === PlayerStatus.PLAYING) return null
+    return (
+      <div
+        className={`
+          w-full h-full absolute
+          text-base text-center capitalize text-gray-50
+          bg-neutral-900/30
+          dark:bg-gray-200/30
+          rounded-md
+          flex justify-center items-center flex-col
+        `}
+      >
+        {me && (
+          <DefaultButton
+            label={status === PlayerStatus.READY ? 'Cancel' : PlayerStatus.READY}
+            // textSize={me ? 'text-sm' : undefined}
+            onClick={handleOnChangePlayerStatus}
+          />
+        )}
+        {!me && status}
+      </div>
+    )
+  }, [status, me, handleOnChangePlayerStatus])
+
   return (
-    <Section title={`${name}(${status})`} center>
+    <Section title={name} center>
       <div className={`w-full h-full grid grid-cols-10 gap-0`}>{drawMap()}</div>
+      {statusDiv}
     </Section>
   )
 }

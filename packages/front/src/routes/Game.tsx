@@ -11,7 +11,6 @@ import { updateRoom } from '../redux/reducers/roomSlice'
 //FIXME: this page render 2 times when the user join a room (join => leave => join)
 //FIXME: there is way to render only once?
 function GamePage() {
-  // const [users, setUsers] = useState<Player[]>([])
   const { players } = useSelector((state: RootState) => state.room)
   const dispatch = useDispatch()
 
@@ -41,7 +40,7 @@ function GamePage() {
       //when user leave game page, emit leaveRoom event
       socket.off(Event.RoomInfo)
     }
-  }, [dispatch])
+  }, [dispatch, socket, roomName, userName])
 
   useEffect(() => {
     if (match === null) {
@@ -51,13 +50,15 @@ function GamePage() {
 
   return (
     <Layout>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
-        {players &&
-          players
-            .filter(player => player.name !== userName)
-            .map((player, i) => <Tetris key={`player[${i}]`} player={player} />)}
+      <div className='flex'>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
+          {players &&
+            players
+              .filter(player => player.name !== userName)
+              .map((player, i) => <Tetris key={`player[${i}]`} player={player} />)}
+        </div>
+        {players && currentUser && <Tetris player={currentUser} me />}
       </div>
-      {players && currentUser && <Tetris player={currentUser} me />}
     </Layout>
   )
 }

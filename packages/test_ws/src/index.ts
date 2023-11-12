@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { Server, Socket } from 'socket.io';
 import cors from 'cors';
-import { RoomStatus, Player, Room, PlayerStatus } from "@red-tetris/common"
+import { RoomStatus, Player, Room, PlayerStatus, Event } from "@red-tetris/common"
 
 dotenv.config();
 
@@ -32,10 +32,10 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-	socket.on('getRoomList', () => {
-		socket.emit('roomList', getPublicRoomList());
+	socket.on(Event.GetRoomList, () => {
+		socket.emit(Event.RoomList, getPublicRoomList());
 	})
-	socket.on('joinRoom', (data) => {
+	socket.on(Event.JoinRoom, (data) => {
 		const { roomName, userName } = data;
 
 		// save userName with socket.id
@@ -79,20 +79,25 @@ io.on('connection', (socket) => {
 
 		// customDebug("joinRoom <<after>>", roomName, socket.id);
 	})
-	socket.on('leaveRoom', (data) => {
+	socket.on(Event.ChangePlayerStatus, (data) => {
+		const { roomName, status } = data;
+
+		updatePlayerStatus(socket.id, status);
+		io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
+	})
+	socket.on(Event.LeaveRoom, (data) => {
 		const { roomName } = data;
 
 		// customDebug("leaveRoom <<before>>", roomName, socket.id);
-
 		socket.leave(roomName);
 		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has left the room: ${roomName}\n`);
-		io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
+		io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
 		userList.delete(socket.id);
-		io.emit('roomList', getPublicRoomList());
+		io.emit(Event.RoomList, getPublicRoomList());
 
 		// customDebug("leaveRoom <<after>>", roomName, socket.id);
 	})
-	socket.on('disconnecting', (reason) => {
+	socket.on(Event.Disconnecting, (reason) => {
 		// customDebug("Disconnecting <<before>>", undefined, socket.id);
 
 		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has disconnected\n`);
@@ -101,12 +106,12 @@ io.on('connection', (socket) => {
 		for (const roomName of socket.rooms) {
 			if (roomName !== socket.id) {
 				socket.leave(roomName)
-				io.to(roomName).emit('roomInfo', getRoomInfo(roomName));
+				io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
 			}
 		}
 
 		userList.delete(socket.id);
-		io.emit('roomList', getPublicRoomList());
+		io.emit(Event.RoomList, getPublicRoomList());
 
 		// customDebug("Disconnecting <<after>>", undefined, socket.id);
 	})
@@ -115,6 +120,17 @@ io.on('connection', (socket) => {
 
 
 //#region Utils
+
+/**
+ * This function let you update player status
+ */
+function updatePlayerStatus(socketId: string, status: PlayerStatus) {
+	const player = getPlayerBySocketId(socketId);
+	if (player) {
+		player.status = status;
+	}
+}
+
 /**
  * This function let you get a player by socket.id
  */
@@ -150,12 +166,12 @@ function getPublicRoomList() {
 /**
  * This function let you get public room list with user list in each room
  */
-function getRoomInfo(roomName: string){
+function getRoomInfo(roomName: string) {
 	const room = io.sockets.adapter.rooms.get(roomName);
-	const players = room ? (Array.from(room).map((id) => userList.get(id))as Player[]) : [];
+	const players = room ? (Array.from(room).map((id) => userList.get(id)) as Player[]) : [];
 	const status = players.find((player) => player.status === PlayerStatus.PLAYING) ? RoomStatus.PLAYING : RoomStatus.WAITING;
 
-	return {name:roomName, status, players};
+	return { name: roomName, status, players };
 
 }
 
