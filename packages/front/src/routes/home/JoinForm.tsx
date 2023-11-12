@@ -13,15 +13,9 @@ function JoinForm() {
   // TODO: replace logic with redux
   const { roomName, userName } = useAppSelector((state: RootState) => state.join)
 
-  const setRoomName = useCallback(
-    (value: string) => disatch(updateRoomName(value)) ,
-    [disatch]
-  )
+  const setRoomName = useCallback((value: string) => disatch(updateRoomName(value)), [disatch])
 
-  const setUserName = useCallback(
-    (value: string) => disatch(updateUserName(value)) ,
-    [disatch]
-  )
+  const setUserName = useCallback((value: string) => disatch(updateUserName(value)), [disatch])
 
   function handleOnSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -30,7 +24,7 @@ function JoinForm() {
 
   return (
     <Section title='Join Room'>
-      <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center w-96 h-1/2'>
+      <form onSubmit={handleOnSubmit} className='flex flex-col gap-4 justify-center w-96'>
         <InputField label={'user name'} type={'text'} name={userName} value={userName} setValue={setUserName} />
         <InputField label={'room name'} type={'text'} name={roomName} value={roomName} setValue={setRoomName} />
         <DefaultButton type='submit' label='Join' />
@@ -40,5 +34,3 @@ function JoinForm() {
 }
 
 export default JoinForm
-
-

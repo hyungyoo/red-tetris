@@ -10,7 +10,7 @@ interface TetrisProps {
 function Tetris(props: TetrisProps) {
   const { player, me } = props
   const { name, status, tetrisMap } = player
-  const BLOCK_SIZE = me ? '1.5rem' : '0.75rem'
+  const BLOCK_SIZE = me ? '1.65rem' : '0.75rem'
 
   const drawMap = useCallback(() => {
     if (!tetrisMap) return null
@@ -23,8 +23,12 @@ function Tetris(props: TetrisProps) {
         map.push(
           <div
             key={`${x}-${y}`}
-            className={`${x}-${y} border border-gray-100`}
-            style={{ background: current ? `linear-gradient(300deg, ${current.color}, #eee)` : 'inherit', width:BLOCK_SIZE, height:BLOCK_SIZE }}
+            className={`${x}-${y} border border-dotted border-gray-100 dark:border-neutral-700`}
+            style={{
+              background: current ? `linear-gradient(300deg, ${current.color}, #eee)` : 'inherit',
+              width: BLOCK_SIZE,
+              height: BLOCK_SIZE
+            }}
           />
         )
       }

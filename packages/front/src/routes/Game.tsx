@@ -51,13 +51,15 @@ function GamePage() {
 
   return (
     <Layout>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
-        {players &&
-          players
-            .filter(player => player.name !== userName)
-            .map((player, i) => <Tetris key={`player[${i}]`} player={player} />)}
+      <div className='flex'>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COL}, minmax(0, 1fr))` }}>
+          {players &&
+            players
+              .filter(player => player.name !== userName)
+              .map((player, i) => <Tetris key={`player[${i}]`} player={player} />)}
+        </div>
+        {players && currentUser && <Tetris player={currentUser} me />}
       </div>
-      {players && currentUser && <Tetris player={currentUser} me />}
     </Layout>
   )
 }

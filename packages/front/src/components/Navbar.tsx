@@ -20,7 +20,7 @@ function Navbar() {
   }, [navigate, name, socket, dispatch])
 
   return (
-    <nav className='w-full flex justify-between items-center p-2 bg-gray-50'>
+    <nav className='w-full flex justify-between items-center p-2 bg-gray-50 dark:bg-neutral-700'>
       {name.length > 0 ? <div onClick={handleOnLeaveRoom}>Back</div> : <div>42</div>}
       <div>{name.length > 0 ? name : 'RED Tetris'}</div>
       <div className={`w-10 h-full border rounded-full`} onClick={() => {}}>
