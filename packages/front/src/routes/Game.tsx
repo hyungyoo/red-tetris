@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { useSocket } from '../utils/hooks/useSocket'
-import { Event, Room } from '@red-tetris/common'
+import { Action, Event, InputKeyCode, PlayerStatus, Room, inputKeyCodes } from '@red-tetris/common'
 import Tetris from './game/Tetris'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
@@ -25,10 +25,50 @@ function GamePage() {
   const currentUser = players.find(player => player.name === userName)
 
   const GRID_COL = useMemo(() => Math.floor(players.length / 2), [players.length])
+
   const handleOnLeaveRoom = useCallback(() => {
     socket.emit(Event.LeaveRoom, { roomName })
     navigate('/')
   }, [navigate, roomName, socket])
+
+  const sendKey = useCallback(
+    (code: InputKeyCode) => {
+      // console.log(`sendKey: ${roomName}, ${userName}, ${code}`)
+      switch (code) {
+        case 'ArrowLeft':
+          return socket.emit(Event.SendAction, { roomName, userName, action: Action.MoveLeft })
+        case 'ArrowRight':
+          return socket.emit(Event.SendAction, { roomName, userName, action: Action.MoveRight })
+        case 'ArrowDown':
+          return socket.emit(Event.SendAction, { roomName, userName, action: Action.MoveDown })
+        case 'ArrowUp':
+          return socket.emit(Event.SendAction, { roomName, userName, action: Action.Rotate })
+        case 'Space':
+          return socket.emit(Event.SendAction, { roomName, userName, action: Action.Drop })
+        default:
+          return
+      }
+    },
+    [roomName, userName]
+  )
+
+  const handleUserInput = useCallback(
+    (e: KeyboardEvent) => {
+      //FIXME: after Playing logic is implemented, change this to PLAYING
+      // if (currentUser?.status === PlayerStatus.PLAYING) {
+      if (currentUser?.status === PlayerStatus.READY && inputKeyCodes.includes(e.key as InputKeyCode)) {
+        sendKey(e.key as InputKeyCode)
+      }
+    },
+    [sendKey, currentUser]
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserInput)
+    return () => {
+      window.addEventListener('keydown', handleUserInput)
+    }
+  }, [handleUserInput])
 
   useEffect(() => {
     //when user join game page, emit joinRoom event

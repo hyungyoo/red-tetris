@@ -9,6 +9,17 @@ export enum PlayerStatus {
   PLAYING = 'playing'
 }
 
+export const inputKeyCodes = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'] as const;
+export type InputKeyCode = typeof inputKeyCodes[number];
+
+export enum Action {
+  MoveLeft = 'moveLeft',
+  MoveRight = 'moveRight',
+  MoveDown = 'moveDown',
+  Rotate = 'rotate',
+  Drop = 'drop'
+}
+
 export type Player = {
   name: string
   score?: number

@@ -115,6 +115,9 @@ io.on('connection', (socket) => {
 
 		// customDebug("Disconnecting <<after>>", undefined, socket.id);
 	})
+	socket.on(Event.SendAction, (data) => {
+		console.log(data);
+	})
 });
 //#endregion
 
