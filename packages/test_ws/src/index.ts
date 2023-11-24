@@ -26,7 +26,7 @@ const httpServer = app.listen(port, () => {
 //#region Web Socket Server with Socket.io
 const io = new Server(httpServer, {
 	cors: {
-		origin: `http://localhost:${process.env.REACT_APP_FRONT_PORT}`, // Allow requests from your React client
+		origin: `http://localhost:${process.env.VITE_FRONT_PORT}`, // Allow requests from your React client
 		methods: ["GET", "POST"],
 	},
 });
