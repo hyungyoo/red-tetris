@@ -5,8 +5,7 @@ import { RootState } from '../redux/store'
 import { useCallback, useMemo } from 'react'
 import { Event } from '@red-tetris/common'
 import { updateName } from '../redux/reducers/roomSlice'
-/* eslint import/no-webpack-loader-syntax: off */
-import logo_white from '!file-loader!../assets/images/42_white.svg'
+import logo_white from '../assets/images/42_white.svg'
 import logo_black from '../assets/images/42_black.png'
 
 //TODO: to implement later dark/light toggle

@@ -5,7 +5,7 @@
   "scripts": {
     "common:build": "env-cmd -f .env npm run -w @red-tetris/common build",
     "back": "env-cmd -f .env npm run -w @red-tetris/back start:dev",
-    "front": "npm run common:build && env-cmd -f .env npm run -w @red-tetris/front start",
+    "front": "env-cmd -f .env npm run -w @red-tetris/front start",
     "test": "env-cmd -f .env npm run -w @red-tetris/test_ws start:dev"
   },
   "repository": {
