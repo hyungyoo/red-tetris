@@ -54,18 +54,16 @@ function Tetris(props: TetrisProps) {
     return (
       <div
         className={`
-          w-full h-full absolute
+          w-full h-2/5 absolute
           text-base text-center capitalize text-gray-50
           bg-neutral-900/30
           dark:bg-gray-200/30
-          rounded-md
           flex justify-center items-center flex-col
         `}
       >
         {me && (
           <DefaultButton
             label={status === PlayerStatus.READY ? 'Cancel' : PlayerStatus.READY}
-            // textSize={me ? 'text-sm' : undefined}
             onClick={handleOnChangePlayerStatus}
           />
         )}
