@@ -10,6 +10,7 @@ export enum PlayerStatus {
 }
 
 export const inputKeyCodes = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'] as const;
+
 export type InputKeyCode = typeof inputKeyCodes[number];
 
 export enum Action {
@@ -42,3 +43,5 @@ export type TetrisMap = Record<Coordinate, Block>
 
 export const GAME_MAP_WIDTH_SIZE = 10;
 export const GAME_MAP_HEIGHT_SIZE = 20;
+
+export type RoomName = string

@@ -20,6 +20,7 @@ function HomePage() {
       socket.emit(Event.GetRoomList)
     })
     socket.on(Event.RoomList, (data: Room[]) => {
+      console.log(data)
       dispatch(updateRoomList(data))
     })
 

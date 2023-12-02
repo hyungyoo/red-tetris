@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@red-tetris/common": ["./build/index.js"]
+      "@red-tetris/common": ["index.ts"]
     }
   }
 }
