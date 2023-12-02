@@ -5,11 +5,14 @@ import {
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
-import { Event } from '@red-tetris/common';
 import { Server, Socket } from 'socket.io';
+import { GameService } from '../game.service';
+import { Event } from '../interfaces/game-event.interface';
 
 @WebSocketGateway({ path: '/', cors: '*' })
 export class GameGateway {
+  constructor(private readonly gameService:GameService) {}
+
   @WebSocketServer()
   server: Server;
 
