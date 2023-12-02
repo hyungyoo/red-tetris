@@ -8,13 +8,24 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameService } from '../game.service';
 import { Event } from '../interfaces/game-event.interface';
+import {
+  JoinRoomPayload,
+  Player,
+  Room,
+} from '../interfaces/game-type.interface';
 
 @WebSocketGateway({ path: '/', cors: '*' })
 export class GameGateway {
-  constructor(private readonly gameService:GameService) {}
-
   @WebSocketServer()
   server: Server;
+
+  private readonly roomList: Map<string, Room>;
+  private readonly playerList: Map<string, Player>;
+
+  constructor(private readonly gameService: GameService) {
+    this.roomList = new Map<string, Room>();
+    this.playerList = new Map<string, Player>();
+  }
 
   @SubscribeMessage(Event.LeaveRoom)
   handleLeaveRoom(client: Socket, payload: any): string {
@@ -23,20 +34,37 @@ export class GameGateway {
     return;
   }
 
+  /**
+   *
+   * @param client
+   * @param payload
+   * @returns
+   */
   @SubscribeMessage(Event.JoinRoom)
-  handleJoinRoom(client: Socket, payload: any): string {
-    console.log(Event.JoinRoom);
-    console.log(payload);
-    console.log(Event.JoinRoom);
-    return;
+  handleJoinRoom(client: Socket, payload: JoinRoomPayload) {
+    const { roomName } = payload;
+    const currentRoom = this.roomList.get(roomName);
+    if (!currentRoom) {
+      return this.gameService.createRoom(
+        client,
+        payload,
+        this.roomList,
+        this.playerList,
+        this.server,
+      );
+    }
+    return this.gameService.updateRoom(
+      client,
+      payload,
+      this.roomList,
+      this.playerList,
+      this.server,
+    );
   }
 
   @SubscribeMessage(Event.GetRoomList)
-  handleGetRoomList(@MessageBody() data: unknown): WsResponse<unknown> {
-    console.log(`${Event.GetRoomList}`);
-    console.log(data);
-    console.log(`${Event.GetRoomList}`);
-
+  handleGetRoomList(): WsResponse<Room[]> {
+    console.log(this.roomList);
     return;
   }
 
