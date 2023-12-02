@@ -39,8 +39,7 @@ export class GameService {
 
     client.join(roomName);
 
-    server.to(roomName).emit(Event.RoomInfo, room);
-    server.emit(Event.RoomList, Array.from(roomList.values()));
+    this.emitUpdatedRoom(server, roomName, room, roomList);
   }
 
   /**
@@ -73,12 +72,42 @@ export class GameService {
     playerList.set(client.id, currentPlayer);
     client.join(roomName);
 
-    server.to(roomName).emit(Event.RoomInfo, currentRoom);
-    server.emit(Event.RoomList, Array.from(roomList.values()));
+    this.emitUpdatedRoom(server, roomName, currentRoom, roomList);
   }
 
-  leaveRoom(client: Socket) {
-    console.log('leave room');
+  /**
+   *
+   * @param client
+   * @param roomList
+   * @param playerList
+   */
+  leaveRoom(
+    client: Socket,
+    roomList: Map<string, Room>,
+    playerList: Map<string, Player>,
+    server: Server,
+  ) {
+    const { id, rooms } = client;
+    const roomName = Array.from(rooms).find((room) => room !== id);
+
+    const targetPlayer = playerList.get(id);
+
+    const currentRoom = roomList.get(roomName);
+
+    if (currentRoom) {
+      currentRoom.players = currentRoom.players.filter(
+        (player) => player.name !== targetPlayer.name,
+      );
+      if (!currentRoom.players.length) {
+        roomList.delete(roomName);
+      }
+
+      playerList.delete(id);
+    }
+
+    client.leave(roomName);
+
+    this.emitUpdatedRoom(server, roomName, currentRoom, roomList);
   }
 
   /**
@@ -112,5 +141,15 @@ export class GameService {
         '8-11': { color: '#333' },
       },
     };
+  }
+
+  private emitUpdatedRoom(
+    server: Server,
+    roomName: string,
+    currentRoom: Room,
+    roomList: Map<string, Room>,
+  ) {
+    server.to(roomName).emit(Event.RoomInfo, currentRoom);
+    server.emit(Event.RoomList, Array.from(roomList.values()));
   }
 }

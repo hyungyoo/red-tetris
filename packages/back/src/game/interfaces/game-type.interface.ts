@@ -53,3 +53,7 @@ export interface JoinRoomPayload {
   roomName: string;
   userName: string;
 }
+
+export interface LeaveRoomPayload {
+  roomName: string;
+}

@@ -10,6 +10,7 @@ import { GameService } from '../game.service';
 import { Event } from '../interfaces/game-event.interface';
 import {
   JoinRoomPayload,
+  LeaveRoomPayload,
   Player,
   Room,
 } from '../interfaces/game-type.interface';
@@ -65,11 +66,21 @@ export class GameGateway {
 
   @SubscribeMessage(Event.Disconnecting)
   handleDisconnecting(client: Socket) {
-    this.gameService.leaveRoom(client);
+    this.gameService.leaveRoom(
+      client,
+      this.roomList,
+      this.playerList,
+      this.server,
+    );
   }
 
   @SubscribeMessage(Event.LeaveRoom)
-  handleLeaveRoom(client: Socket) {
-    this.gameService.leaveRoom(client);
+  handleLeaveRoom(client: Socket, payload: LeaveRoomPayload) {
+    this.gameService.leaveRoom(
+      client,
+      this.roomList,
+      this.playerList,
+      this.server,
+    );
   }
 }

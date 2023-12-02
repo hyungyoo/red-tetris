@@ -79,7 +79,6 @@ function GamePage() {
     return () => {
       //when user leave game page, emit leaveRoom event
       socket.off(Event.RoomInfo)
-      socket.emit(Event.LeaveRoom, { roomName })
     }
   }, [dispatch, socket, roomName, userName])
 
