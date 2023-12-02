@@ -27,12 +27,6 @@ export class GameGateway {
     this.playerList = new Map<string, Player>();
   }
 
-  @SubscribeMessage(Event.LeaveRoom)
-  handleLeaveRoom(client: Socket, payload: any): string {
-    console.log('leave room');
-    return;
-  }
-
   /**
    *
    * @param client
@@ -61,14 +55,21 @@ export class GameGateway {
     );
   }
 
+  /**
+   *
+   */
   @SubscribeMessage(Event.GetRoomList)
   handleGetRoomList() {
     this.server.emit(Event.RoomList, Array.from(this.roomList.values()));
   }
 
   @SubscribeMessage(Event.Disconnecting)
-  handleDisconnecting(client: Socket, payload: any): string {
-    console.log('disconnecting!');
-    return;
+  handleDisconnecting(client: Socket) {
+    this.gameService.leaveRoom(client);
+  }
+
+  @SubscribeMessage(Event.LeaveRoom)
+  handleLeaveRoom(client: Socket) {
+    this.gameService.leaveRoom(client);
   }
 }

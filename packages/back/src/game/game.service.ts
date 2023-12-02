@@ -77,6 +77,10 @@ export class GameService {
     server.emit(Event.RoomList, Array.from(roomList.values()));
   }
 
+  leaveRoom(client: Socket) {
+    console.log('leave room');
+  }
+
   /**
    *
    * @param userName
