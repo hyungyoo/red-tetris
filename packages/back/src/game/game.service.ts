@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import {
+  ChangePlayerStatusPayload,
   JoinRoomPayload,
+  LeaveRoomPayload,
   Player,
   PlayerStatus,
   Room,
@@ -112,6 +114,41 @@ export class GameService {
 
   /**
    *
+   * @param client
+   * @param payload
+   * @param roomList
+   * @param playerList
+   * @param server
+   */
+  changePlayerStatus(
+    client: Socket,
+    payload: ChangePlayerStatusPayload,
+    roomList: Map<string, Room>,
+    playerList: Map<string, Player>,
+    server: Server,
+  ) {
+    const { id } = client;
+    const { roomName, status } = payload;
+
+    const targetPlayer = playerList.get(id);
+    const currentRoom = roomList.get(roomName);
+
+    currentRoom.players = currentRoom.players.map((player) => {
+      if (player.name === targetPlayer.name) {
+        player.status = status;
+      }
+      return player;
+    });
+
+    playerList.set(id, { ...targetPlayer, status });
+
+    // all players ready, room status => play , players => play
+
+    server.to(roomName).emit(Event.RoomInfo, currentRoom);
+  }
+
+  /**
+   *
    * @param userName
    * @returns
    */
@@ -143,6 +180,13 @@ export class GameService {
     };
   }
 
+  /**
+   *
+   * @param server
+   * @param roomName
+   * @param currentRoom
+   * @param roomList
+   */
   private emitUpdatedRoom(
     server: Server,
     roomName: string,

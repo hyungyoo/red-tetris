@@ -9,6 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { GameService } from '../game.service';
 import { Event } from '../interfaces/game-event.interface';
 import {
+  ChangePlayerStatusPayload,
   JoinRoomPayload,
   LeaveRoomPayload,
   Player,
@@ -64,6 +65,10 @@ export class GameGateway {
     this.server.emit(Event.RoomList, Array.from(this.roomList.values()));
   }
 
+  /**
+   *
+   * @param client
+   */
   @SubscribeMessage(Event.Disconnecting)
   handleDisconnecting(client: Socket) {
     this.gameService.leaveRoom(
@@ -74,6 +79,11 @@ export class GameGateway {
     );
   }
 
+  /**
+   *
+   * @param client
+   * @param payload
+   */
   @SubscribeMessage(Event.LeaveRoom)
   handleLeaveRoom(client: Socket, payload: LeaveRoomPayload) {
     this.gameService.leaveRoom(
@@ -82,5 +92,10 @@ export class GameGateway {
       this.playerList,
       this.server,
     );
+  }
+
+  @SubscribeMessage(Event.ChangePlayerStatus)
+  handleChangePlayerStatus(client: Socket, payload: ChangePlayerStatusPayload) {
+    this.gameService.changePlayerStatus(client, payload, this.roomList, this.playerList, this.server);
   }
 }

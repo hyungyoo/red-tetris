@@ -57,3 +57,8 @@ export interface JoinRoomPayload {
 export interface LeaveRoomPayload {
   roomName: string;
 }
+
+export interface ChangePlayerStatusPayload {
+  roomName: string;
+  status: PlayerStatus;
+}
