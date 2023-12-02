@@ -10,6 +10,7 @@ export enum PlayerStatus {
 }
 
 export const inputKeyCodes = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'] as const;
+
 export type InputKeyCode = typeof inputKeyCodes[number];
 
 export enum Action {
