@@ -29,8 +29,7 @@ export class GameGateway {
 
   @SubscribeMessage(Event.LeaveRoom)
   handleLeaveRoom(client: Socket, payload: any): string {
-    console.log(payload);
-    console.log(`${Event.LeaveRoom}`);
+    console.log('leave room');
     return;
   }
 
@@ -63,16 +62,13 @@ export class GameGateway {
   }
 
   @SubscribeMessage(Event.GetRoomList)
-  handleGetRoomList(): WsResponse<Room[]> {
-    console.log(this.roomList);
-    return;
+  handleGetRoomList() {
+    this.server.emit(Event.RoomList, Array.from(this.roomList.values()));
   }
 
   @SubscribeMessage(Event.Disconnecting)
   handleDisconnecting(client: Socket, payload: any): string {
-    console.log(`${Event.Disconnecting}`);
-    console.log(payload);
-    console.log(`${Event.Disconnecting}`);
+    console.log('disconnecting!');
     return;
   }
 }
