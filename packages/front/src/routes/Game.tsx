@@ -49,7 +49,7 @@ function GamePage() {
           return
       }
     },
-    [roomName, userName]
+    [roomName, userName, socket]
   )
 
   const handleUserInput = useCallback(
