@@ -85,7 +85,7 @@ export class GameGateway {
    * @param payload
    */
   @SubscribeMessage(Event.LeaveRoom)
-  handleLeaveRoom(client: Socket, payload: LeaveRoomPayload) {
+  handleLeaveRoom(client: Socket) {
     this.gameService.leaveRoom(
       client,
       this.roomList,
@@ -96,6 +96,12 @@ export class GameGateway {
 
   @SubscribeMessage(Event.ChangePlayerStatus)
   handleChangePlayerStatus(client: Socket, payload: ChangePlayerStatusPayload) {
-    this.gameService.changePlayerStatus(client, payload, this.roomList, this.playerList, this.server);
+    this.gameService.changePlayerStatus(
+      client,
+      payload,
+      this.roomList,
+      this.playerList,
+      this.server,
+    );
   }
 }

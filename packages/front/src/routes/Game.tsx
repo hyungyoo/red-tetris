@@ -49,7 +49,7 @@ function GamePage() {
           return
       }
     },
-    [roomName, userName]
+    [roomName, userName, socket]
   )
 
   const handleUserInput = useCallback(
@@ -87,6 +87,12 @@ function GamePage() {
       handleOnLeaveRoom()
     }
   }, [slug, match, navigate, handleOnLeaveRoom])
+
+  useEffect(() => {
+    return () => {
+      socket.emit(Event.LeaveRoom)
+    }
+  }, [socket])
 
   return (
     <Layout>
