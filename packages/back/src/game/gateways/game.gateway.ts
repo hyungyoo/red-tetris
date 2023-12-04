@@ -71,6 +71,7 @@ export class GameGateway {
    */
   @SubscribeMessage(Event.Disconnecting)
   handleDisconnecting(client: Socket) {
+    // console.log('Here');
     this.gameService.leaveRoom(
       client,
       this.roomList,
