@@ -193,6 +193,8 @@ export class GameService {
     currentRoom: Room,
     roomList: Map<string, Room>,
   ) {
+    //FIXME: when close browser, roomName and currentRoom is undefined => see game.service.leaveRoom()
+    //console.log('emitUpdatedRoom', roomName, currentRoom, roomList);
     server.to(roomName).emit(Event.RoomInfo, currentRoom);
     server.emit(Event.RoomList, Array.from(roomList.values()));
   }

@@ -20,30 +20,19 @@ function HomePage() {
       socket.emit(Event.GetRoomList)
     })
     socket.on(Event.RoomList, (data: Room[]) => {
-      console.log(data)
       dispatch(updateRoomList(data))
     })
-
-    // socket.on("test2", data => {
-    //   console.log(data)
-    // })
 
     return () => {
       socket.off(Event.Connect)
       socket.off(Event.RoomList)
-      // socket.off("test2")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
   return (
     <Layout>
-      {/* <div className='flex w-full justify-center'> */}
       <JoinForm />
       <RoomList rooms={roomList} />
-      {/* <button onClick={()=> {
-          socket.emit("test", "hello test")
-        }}>test</button> */}
-      {/* </div> */}
     </Layout>
   )
 }

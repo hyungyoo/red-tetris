@@ -26,11 +26,6 @@ function GamePage() {
 
   const GRID_COL = useMemo(() => Math.floor(players.length / 2), [players.length])
 
-  const handleOnLeaveRoom = useCallback(() => {
-    socket.emit(Event.LeaveRoom, { roomName })
-    navigate('/')
-  }, [navigate, roomName, socket])
-
   const sendKey = useCallback(
     (code: InputKeyCode) => {
       // console.log(`sendKey: ${roomName}, ${userName}, ${code}`)
@@ -81,12 +76,6 @@ function GamePage() {
       socket.off(Event.RoomInfo)
     }
   }, [dispatch, socket, roomName, userName])
-
-  useEffect(() => {
-    if (match === null) {
-      handleOnLeaveRoom()
-    }
-  }, [slug, match, navigate, handleOnLeaveRoom])
 
   useEffect(() => {
     return () => {
