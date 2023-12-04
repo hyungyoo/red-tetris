@@ -88,6 +88,12 @@ function GamePage() {
     }
   }, [slug, match, navigate, handleOnLeaveRoom])
 
+  useEffect(() => {
+    return () => {
+      socket.emit(Event.LeaveRoom)
+    }
+  }, [socket])
+
   return (
     <Layout>
       <div className='flex'>

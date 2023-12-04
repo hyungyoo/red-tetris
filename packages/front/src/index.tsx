@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { HashRouter, Route, Routes } from 'react-router-dom'
@@ -8,14 +7,12 @@ import ReduxProviders from './redux/provider'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
-    <ReduxProviders>
-      <HashRouter>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/:slug' element={<Game />} />
-        </Routes>
-      </HashRouter>
-    </ReduxProviders>
-  </React.StrictMode>
+  <ReduxProviders>
+    <HashRouter>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/:slug' element={<Game />} />
+      </Routes>
+    </HashRouter>
+  </ReduxProviders>
 )
