@@ -3,13 +3,11 @@ import { Server, Socket } from 'socket.io';
 import {
   ChangePlayerStatusPayload,
   JoinRoomPayload,
-  LeaveRoomPayload,
   Player,
   PlayerStatus,
   Room,
   RoomStatus,
 } from './interfaces/game-type.interface';
-import { WebSocketServer } from '@nestjs/websockets';
 import { Event } from './interfaces/game-event.interface';
 
 @Injectable()
@@ -28,7 +26,7 @@ export class GameService {
     server: Server,
   ) {
     const { roomName, userName } = payload;
-    const currentPlayer = this.createPlayer(userName);
+    const currentPlayer = this.createPlayer(client.id, userName);
 
     const room = {
       name: roomName,
@@ -60,7 +58,7 @@ export class GameService {
   ) {
     const { roomName, userName } = payload;
 
-    const currentPlayer = this.createPlayer(userName);
+    const currentPlayer = this.createPlayer(client.id, userName);
     const currentRoom = roomList.get(roomName);
 
     const hasPlayer = currentRoom.players.find(
@@ -90,25 +88,32 @@ export class GameService {
     server: Server,
   ) {
     const { id, rooms } = client;
-    const roomName = Array.from(rooms).find((room) => room !== id);
 
-    const targetPlayer = playerList.get(id);
+    let roomName = Array.from(rooms).find((room) => room !== id);
+    let currentRoom = roomList.get(roomName);
 
-    const currentRoom = roomList.get(roomName);
+    //Manage case when user close browser
+    //Best practice => util function which find and update ghost player(like garbege collector)
+    if (!rooms.size) {
+      roomList.forEach((room) => {
+        if (room.players.find((player) => player.id === id)) {
+          currentRoom = room;
+          roomName = room.name;
+        }
+      });
+    }
 
     if (currentRoom) {
       currentRoom.players = currentRoom.players.filter(
-        (player) => player.name !== targetPlayer.name,
+        (player) => player.id !== id,
       );
       if (!currentRoom.players.length) {
         roomList.delete(roomName);
       }
-
       playerList.delete(id);
     }
 
     client.leave(roomName);
-
     this.emitUpdatedRoom(server, roomName, currentRoom, roomList);
   }
 
@@ -152,8 +157,9 @@ export class GameService {
    * @param userName
    * @returns
    */
-  private createPlayer(userName: string) {
+  private createPlayer(clientId: string, userName: string) {
     return {
+      id: clientId,
       name: userName,
       status: PlayerStatus.WAITING,
       //FIXME: create a enum for color in type.ts is better or use defined tailwinds color - ex: send color: 'red-500' to client
