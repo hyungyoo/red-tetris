@@ -16,7 +16,6 @@ function GamePage() {
 
   const { slug } = useParams()
   const { socket } = useSocket()
-  const navigate = useNavigate()
 
   const regex = /^([^[]+)(?:\[(.*?)\])?$/
   const match = slug?.match(regex)

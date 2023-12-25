@@ -27,6 +27,7 @@ export enum Action {
 }
 
 export type Player = {
+  id?: string;
   name: string;
   score?: number;
   status: PlayerStatus;
