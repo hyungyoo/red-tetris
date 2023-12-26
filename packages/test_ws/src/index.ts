@@ -85,35 +85,11 @@ io.on('connection', (socket) => {
 		updatePlayerStatus(socket.id, status);
 		io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
 	})
-	socket.on(Event.LeaveRoom, (data) => {
-		const { roomName } = data;
-
-		// customDebug("leaveRoom <<before>>", roomName, socket.id);
-		socket.leave(roomName);
-		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has left the room: ${roomName}\n`);
-		io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
-		userList.delete(socket.id);
-		io.emit(Event.RoomList, getPublicRoomList());
-
-		// customDebug("leaveRoom <<after>>", roomName, socket.id);
+	socket.on(Event.LeaveRoom, () => {
+		leaveAllRooms(socket, "LeaveRoomEvent");
 	})
 	socket.on(Event.Disconnecting, (reason) => {
-		// customDebug("Disconnecting <<before>>", undefined, socket.id);
-
-		console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has disconnected\n`);
-
-		// leave all rooms
-		for (const roomName of socket.rooms) {
-			if (roomName !== socket.id) {
-				socket.leave(roomName)
-				io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
-			}
-		}
-
-		userList.delete(socket.id);
-		io.emit(Event.RoomList, getPublicRoomList());
-
-		// customDebug("Disconnecting <<after>>", undefined, socket.id);
+		leaveAllRooms(socket, "DisconnectingEvent");
 	})
 	socket.on(Event.SendAction, (data) => {
 		console.log(data);
@@ -123,6 +99,20 @@ io.on('connection', (socket) => {
 
 
 //#region Utils
+/**
+ * This function let you leave all rooms
+ */
+function leaveAllRooms(socket: Socket, reason?: string) {
+	for (const roomName of socket.rooms) {
+		if (roomName !== socket.id) {
+			socket.leave(roomName)
+			console.debug(`${getPlayerBySocketId(socket.id)?.name}(${socket.id}) has leaved the room: ${roomName}(reason:${reason})\n`);
+			io.to(roomName).emit(Event.RoomInfo, getRoomInfo(roomName));
+		}
+	}
+	userList.delete(socket.id);
+	io.emit(Event.RoomList, getPublicRoomList());
+}
 
 /**
  * This function let you update player status
