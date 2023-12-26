@@ -27,7 +27,7 @@ function GamePage() {
 
   const sendKey = useCallback(
     (code: InputKeyCode) => {
-      // console.log(`sendKey: ${roomName}, ${userName}, ${code}`)
+      console.log(`sendKey: ${roomName}, ${userName}, ${code}`)
       switch (code) {
         case 'ArrowLeft':
           return socket.emit(Event.SendAction, { roomName, userName, action: Action.MoveLeft })
@@ -49,7 +49,7 @@ function GamePage() {
   const handleUserInput = useCallback(
     (e: KeyboardEvent) => {
       //FIXME: after Playing logic is implemented, change this to PLAYING
-      // if (currentUser?.status === PlayerStatus.PLAYING) {
+      // if (currentUser?.status === PlayerStatus.PLAYING && inputKeyCodes.includes(e.key as InputKeyCode)) {
       if (currentUser?.status === PlayerStatus.READY && inputKeyCodes.includes(e.key as InputKeyCode)) {
         sendKey(e.key as InputKeyCode)
       }
